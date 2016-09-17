@@ -1,0 +1,114 @@
+﻿@model Gerador.Models.Clientes
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Clientes</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoPessoa)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoPessoa)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CpfCnpj)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CpfCnpj)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Sexo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sexo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Profissao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Profissao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DataNascimento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DataNascimento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Renda)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Renda)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EstadoCivil)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EstadoCivil)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RegimeCasamento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RegimeCasamento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Conjuge_Cpf)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Conjuge_Cpf)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Conjuge_Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Conjuge_Nome)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IDCliente }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

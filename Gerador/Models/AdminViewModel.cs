@@ -14,13 +14,21 @@ namespace IdentitySample.Models
 
     public class EditUserViewModel
     {
-        public string Id { get; set; }
+		public string Id { get; set; }
 
-        [Required(AllowEmptyStrings = false)]
+		[Required(AllowEmptyStrings = false)]
+		[Display(Name = "Nome")]
+		public string Nome { get; set; }
+
+		[Required(AllowEmptyStrings = false)]
         [Display(Name = "Email")]
         [EmailAddress]
         public string Email { get; set; }
 
-        public IEnumerable<SelectListItem> RolesList { get; set; }
+		[Required(AllowEmptyStrings = false)]
+		[Display(Name = "Empresa")]
+		public int IDEmpresa { get; set; }
+
+		public IEnumerable<SelectListItem> RolesList { get; set; }
     }
 }

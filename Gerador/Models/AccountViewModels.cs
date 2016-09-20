@@ -61,12 +61,20 @@ namespace IdentitySample.Models
 
     public class RegisterViewModel
     {
-        [Required]
+		[Required]
+		[Display(Name = "Nome")]
+		public string Nome { get; set; }
+
+		[Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required]
+		[Required]
+		[Display(Name = "Empresa")]
+		public int IDEmpresa { get; set; }
+
+		[Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]

@@ -10,12 +10,24 @@
     <h4>User</h4>
     <hr />
     <dl class="dl-horizontal">
+		<dt>
+			@Html.DisplayNameFor(model => model.Nome)
+		</dt>
+		<dd>
+			@Html.DisplayFor(model => model.Nome)
+		</dd>
         <dt>
             @Html.DisplayNameFor(model => model.UserName)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.UserName)
         </dd>
+		<dt>
+			@Html.DisplayNameFor(model => model.Empresas.Nome)
+		</dt>
+		<dd>
+			@Html.DisplayFor(model => model.Empresas.Nome)
+		</dd>
     </dl>
 </div>
 <h4>List of roles for this user</h4>

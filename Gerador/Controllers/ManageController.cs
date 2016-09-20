@@ -39,12 +39,12 @@ namespace IdentitySample.Controllers
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.SetTwoFactorSuccess ? "Your two factor provider has been set."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : message == ManageMessageId.AddPhoneSuccess ? "The phone number was added."
-                : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
+                message == ManageMessageId.ChangePasswordSuccess ? "Sua senha foi alterada."
+                : message == ManageMessageId.SetPasswordSuccess ? "Sua senha foi definida."
+                : message == ManageMessageId.SetTwoFactorSuccess ? "Autenticação em duas etapas definida."
+                : message == ManageMessageId.Error ? "Ocorreu um erro =(."
+                : message == ManageMessageId.AddPhoneSuccess ? "Número de telefone adicionado."
+                : message == ManageMessageId.RemovePhoneSuccess ? "Número de telefone removido."
                 : "";
 
             var model = new IndexViewModel
@@ -115,7 +115,7 @@ namespace IdentitySample.Controllers
                 var message = new IdentityMessage
                 {
                     Destination = model.Number,
-                    Body = "Your security code is: " + code
+                    Body = "Seu código de segurança é: " + code
                 };
                 await UserManager.SmsService.SendAsync(message);
             }
@@ -176,7 +176,7 @@ namespace IdentitySample.Controllers
             // This code allows you exercise the flow without actually sending codes
             // For production use please register a SMS provider in IdentityConfig and generate a code here.
             var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), phoneNumber);
-            ViewBag.Status = "For DEMO purposes only, the current code is " + code;
+            ViewBag.Status = "Para demonstração, seu código é " + code;
             return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
         }
 
@@ -201,7 +201,7 @@ namespace IdentitySample.Controllers
                 return RedirectToAction("Index", new { Message = ManageMessageId.AddPhoneSuccess });
             }
             // If we got this far, something failed, redisplay form
-            ModelState.AddModelError("", "Failed to verify phone");
+            ModelState.AddModelError("", "Falha ao verificar número de telefone");
             return View(model);
         }
 

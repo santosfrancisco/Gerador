@@ -10,12 +10,14 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Gerador.Models;
 
 namespace IdentitySample.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class UsersAdminController : Controller
     {
+		public ApplicationDbContext db = new ApplicationDbContext();
         public UsersAdminController()
         {
         }
@@ -70,6 +72,7 @@ namespace IdentitySample.Controllers
             var user = await UserManager.FindByIdAsync(id);
 
             ViewBag.RoleNames = await UserManager.GetRolesAsync(user.Id);
+			ViewBag.Empresa = user.Empresas.Nome;
 
             return View(user);
         }
@@ -80,7 +83,9 @@ namespace IdentitySample.Controllers
         {
             //Get the list of Roles
             ViewBag.RoleId = new SelectList(await RoleManager.Roles.ToListAsync(), "Name", "Name");
-            return View();
+
+			ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+			return View();
         }
 
         //
@@ -90,7 +95,7 @@ namespace IdentitySample.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = userViewModel.Email, Email = userViewModel.Email };
+                var user = new ApplicationUser { Nome = userViewModel.Nome, UserName = userViewModel.Email, Email = userViewModel.Email, IDEmpresa = userViewModel.IDEmpresa };
                 var adminresult = await UserManager.CreateAsync(user, userViewModel.Password);
 
                 //Add User to the selected Roles 
@@ -103,7 +108,8 @@ namespace IdentitySample.Controllers
                         {
                             ModelState.AddModelError("", result.Errors.First());
                             ViewBag.RoleId = new SelectList(await RoleManager.Roles.ToListAsync(), "Name", "Name");
-                            return View();
+							ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+							return View();
                         }
                     }
                 }
@@ -111,13 +117,15 @@ namespace IdentitySample.Controllers
                 {
                     ModelState.AddModelError("", adminresult.Errors.First());
                     ViewBag.RoleId = new SelectList(RoleManager.Roles, "Name", "Name");
-                    return View();
+					ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+					return View();
 
                 }
                 return RedirectToAction("Index");
             }
             ViewBag.RoleId = new SelectList(RoleManager.Roles, "Name", "Name");
-            return View();
+			ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+			return View();
         }
 
         //
@@ -135,8 +143,9 @@ namespace IdentitySample.Controllers
             }
 
             var userRoles = await UserManager.GetRolesAsync(user.Id);
+			ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
 
-            return View(new EditUserViewModel()
+			return View(new EditUserViewModel()
             {
                 Id = user.Id,
                 Email = user.Email,
@@ -153,7 +162,7 @@ namespace IdentitySample.Controllers
         // POST: /Users/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Email,Id")] EditUserViewModel editUser, params string[] selectedRole)
+        public async Task<ActionResult> Edit([Bind(Include = "Nome,UserName,Email,IDEmpresa,Id")] EditUserViewModel editUser, params string[] selectedRole)
         {
             if (ModelState.IsValid)
             {

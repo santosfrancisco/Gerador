@@ -12,7 +12,10 @@ namespace IdentitySample
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*",
+						"~/Scripts/jquery-3.1.0.min.js",
 					  "~/Scripts/masks.js",
+					  "~/Scripts/jquery-confirm.min.js",
+					  "~/Scripts/jquery-ui-1.12.1.js",
 					  "~/Scripts/jquery.mask.js"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
@@ -26,7 +29,8 @@ namespace IdentitySample
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css",
+					  "~/Content/jquery-confirm.css",
+					  "~/Content/site.css",
 					  "~/Content/animate.css"));
         }
     }

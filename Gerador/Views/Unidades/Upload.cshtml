@@ -1,0 +1,109 @@
+﻿@*@model Gerador.Models.Unidades*@
+@*@model System.Data.DataTable*@
+@using System.Data;
+
+@{
+	ViewBag.Title = "Upload";
+}
+
+<h2>Importar unidades</h2>
+
+
+<h3>Cadastrar unidades por planilha</h3>
+<div class="panel panel-body">
+	<h4>Informações sobre nome e formato da planilha</h4>
+	<ul>
+		<li>O ID deste empreendimento é @(ViewContext.RouteData.Values["id"]), então um nome válido para a sua planilha é @(ViewContext.RouteData.Values["id"]) - @(ViewBag.Empreendimento).</li>
+		<li>O sistema aceita arquivos no formato .CSV (Valores separados por vírgula)</li>
+	</ul>
+	<h4>Informações sobre as colunas da planilha</h4>
+	<ul>
+		<li>Numero: aceita números e letras (ex. 101 ou U101)</li>
+		<li>Status: 0 (zero) para DISPONÍVEL ou 1 (um) para VENDIDA.</li>
+		<li>Observacao: (Opcional) Um pequeno texto com alguma observação sobre a unidade.</li>
+	</ul>
+</div>
+
+@{ using (Html.BeginForm("Upload", "Unidades", FormMethod.Post, new { enctype = "multipart/form-data", id = "importar" }))
+	{
+		@Html.AntiForgeryToken()
+		@Html.ValidationSummary()
+		<div class="well">
+			<span>Faça o download da planilha modelo:</span> @Html.ActionLink("Download", "PlanilhaModelo", new { id = ViewContext.RouteData.Values["id"] }, new { @class = "btn btn-default" })<br /><br />
+			<div id="mensagem" style="padding:20px" class="animated flipInX">
+				@if (ViewBag.FeedBack == "Sucesso")
+				{
+					<div class="alert alert-dismissible alert-success">
+						<button type="button" class="close" data-dismiss="alert">&times;</button>
+						<h4>Parabéns!</h4>
+						<p>@ViewBag.FeedBack</p>
+					</div>
+				}
+				else if (ViewBag.FeedBack == "Aviso")
+				{
+					<div class="alert alert-dismissible alert-info">
+						<button type="button" class="close" data-dismiss="alert">&times;</button>
+						<h4>Importante!</h4>
+						<p>Por segurança, o nome do arquivo deve iniciar com o ID do empreendimento. Exemplo (@(ViewContext.RouteData.Values["id"]) - @(ViewBag.Empreendimento)).</p>
+					</div>
+				}
+				else
+				{
+					<div class="alert alert-dismissible alert-warning">
+						<button type="button" class="close" data-dismiss="alert">&times;</button>
+						<h4>Ops!</h4>
+						<p>@ViewBag.FeedBack</p>
+					</div>
+				}
+			</div>
+			<span><b>Selecione a planilha em formato CSV no seu computador.</b></span><br /><br />
+			<input type="file" required name="FileUpload" id="FileUpload" /><br />
+			<input type="hidden" id="OK" name="OK" value="false" />
+			<input type="button" name="Submit" id="Submit" value="Importar unidades" class="btn btn-primary confirm" /><br />
+
+
+		</div>
+	}
+}
+
+@section scripts{
+	<script>
+		$(document).ready(function () {
+			$("#Submit").click(function () {
+				var arquivo = document.getElementById('FileUpload');
+				if (arquivo.files.length == 0) {
+					$.alert({
+						title: 'Atenção!',
+						content: 'Nenhum arquivo selecionado.',
+						confirmButton: 'OK',
+						confirmButtonClass: 'btn-info',
+					});
+					return;
+				}
+				$.confirm({
+					title: 'Atenção!',
+					content: 'Confirmar importação de unidades no empreendimento @(ViewBag.Empreendimento)',
+					confirmButton: 'Continuar',
+					cancelButton: 'Cancelar',
+					confirmButtonClass: 'btn-info',
+					cancelButtonClass: 'btn-danger',
+					animation: 'RotateY',
+					closeAnimation: 'RotateYR',
+					confirm: function () {
+						$('#OK').val(true);
+						$('#importar').submit();
+					},
+					cancel: function () {
+						$('#OK').val(false);
+						$('#importar').submit();
+					}
+				});
+			});
+		});
+	</script>
+
+}
+
+
+
+

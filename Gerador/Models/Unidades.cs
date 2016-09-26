@@ -6,25 +6,50 @@ namespace Gerador.Models
 	using System.Collections.Generic;
 	using System.ComponentModel.DataAnnotations;
 	using System.ComponentModel.DataAnnotations.Schema;
+	using System.Linq;
+	using System.Web.Mvc;
 
 	public partial class Unidades
-    {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Unidades()
-        {
-            this.Analises = new HashSet<Analises>();
-        }
-		[Key]
-        public int IDUnidade { get; set; }
-        public string Numero { get; set; }
+	{
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+		public Unidades()
+		{
+			this.Analises = new HashSet<Analises>();
+		}
 		[ForeignKey("Empreendimentos")]
-        public int IDEmpreendimento { get; set; }
-        public int UnidadeStatus { get; set; }
-        public string Tipo { get; set; }
-        public string UnidadeObservacao { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Analises> Analises { get; set; }
-        public virtual Empreendimentos Empreendimentos { get; set; }
-    }
+		public int IDEmpreendimento { get; set; }
+		[Key]
+		public int IDUnidade { get; set; }
+		public string Numero { get; set; }
+		public Status UnidadeStatus { get; set; }
+		public Tipos Tipo { get; set; }
+		public string UnidadeObservacao { get; set; }
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+		public virtual ICollection<Analises> Analises { get; set; }
+		public virtual Empreendimentos Empreendimentos { get; set; }
+
+		//public static List<SelectListItem> TipoUnidade()
+		//{
+		//	IList<SelectListItem> tipo = new List<SelectListItem>();
+		//	tipo.Add(new SelectListItem() { Text = "Residencial", Value = "0" });
+		//	tipo.Add(new SelectListItem() { Text = "Comercial", Value = "1" });
+		//	return tipo.ToList();
+		//}
+		//public static List<SelectListItem> StatusUnidade()
+		//{
+		//	IList<SelectListItem> status = new List<SelectListItem>();
+		//	status.Add(new SelectListItem() { Text = "Disponível", Value = "0" });
+		//	status.Add(new SelectListItem() { Text = "Vendida", Value = "1" });
+		//	return status.ToList();
+		//}
+		public enum Status
+		{
+			Disponível, Vendida,Suspensa
+		}
+		public enum Tipos
+		{
+			Residencial, Comercial
+		}
+	}
 }

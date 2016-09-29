@@ -1,13 +1,11 @@
 ﻿@model Gerador.Models.Unidades
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Informações";
 }
 
-<h2>Details</h2>
-
 <div>
-    <h4>Unidades</h4>
+    <h4>Informações sobre a unidade</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -53,6 +51,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.IDUnidade }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Editar", "Edit", new { id = Model.IDUnidade }, htmlAttributes: new { @class = "btn btn-primary" }) 
+    @Html.ActionLink("Voltar", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
 </p>

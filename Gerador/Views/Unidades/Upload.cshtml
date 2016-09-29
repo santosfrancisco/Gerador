@@ -3,11 +3,8 @@
 @using System.Data;
 
 @{
-	ViewBag.Title = "Upload";
+	ViewBag.Title = "Importar unidades";
 }
-
-<h2>Importar unidades</h2>
-
 
 <h3>Cadastrar unidades por planilha</h3>
 <div class="panel panel-body">
@@ -82,7 +79,7 @@
 				}
 				$.confirm({
 					title: 'Atenção!',
-					content: 'Confirmar importação de unidades no empreendimento @(ViewBag.Empreendimento)',
+					content: 'Confirmar importação de unidades no empreendimento @(ViewBag.Empreendimento)?',
 					confirmButton: 'Continuar',
 					cancelButton: 'Cancelar',
 					confirmButtonClass: 'btn-info',

@@ -14,6 +14,7 @@ using LumenWorks.Framework.IO.Csv;
 using System.Text.RegularExpressions;
 using System.Configuration;
 using System.Data.SqlClient;
+using PagedList;
 
 namespace Gerador.Controllers
 {
@@ -203,13 +204,86 @@ namespace Gerador.Controllers
 
 			return Feedback;
 		}
-		
-		// GET: Unidades/Create
-		public ActionResult Create()
+
+		// GET: Unidades/Consulta/5
+		public async Task<ActionResult> Consulta(int? id, int? page, string sortOrder, string currentFilter, string searchString)
 		{
+			ViewBag.CurrentSort = sortOrder;
+			ViewBag.NumeroParam = String.IsNullOrEmpty(sortOrder) ? "Numero_Desc" : "";
+			ViewBag.StatusParam = sortOrder == "Status" ? "Status_Desc" : "Status";
+			List<Unidades> unidades;
+
+			if (id == null)
+			{
+				return RedirectToAction("Index", "Home", null);
+			}
+
+			unidades = await db.Unidades.Where(u => u.IDEmpreendimento == id).ToListAsync();
+
+			//var tipoUsuario = RepositorioUsuarios.VerificaTipoUsuario();
+			//var idUsuario = RepositorioUsuarios.RecuperaIDUsuario();
+			//if (tipoUsuario == 0)
+			//{
+			//	unidades = await db.Unidades.Where(u => u.IDEmpreendimento == id).ToListAsync();
+			//}
+			//else if (tipoUsuario == 1)
+			//{
+			//	unidades = await db.Unidades.Where(u => u.IDEmpreendimento == id).ToListAsync();
+			//}
+			//else
+			//{
+			//	unidades = await db.Unidades.Where(u => u.IDEmpreendimento == id && (u.UnidadeStatus == 0 || u.Analises.FirstOrDefault().Clientes.IDUsuario == idUsuario)).ToListAsync();
+			//}
+
+			if (searchString != null)
+			{
+				page = 1;
+			}
+			else
+			{
+				searchString = currentFilter;
+			}
+
+			ViewBag.CurrentFilter = searchString;
+
+			if (!String.IsNullOrEmpty(searchString))
+			{
+				unidades = unidades.Where(u => u.Numero.ToUpper().Contains(searchString.ToUpper())).ToList();
+			}
+
+			switch (sortOrder)
+			{
+				case "Numero_Desc":
+					unidades = unidades.OrderByDescending(u => u.Numero).ToList();
+					break;
+				case "Status":
+					unidades = unidades.OrderBy(u => u.UnidadeStatus).ToList();
+					break;
+				case "Status_Desc":
+					unidades = unidades.OrderByDescending(u => u.UnidadeStatus).ToList();
+					break;
+				default:
+					unidades = unidades.OrderBy(u => u.Numero).ToList();
+					break;
+			}
+			ViewBag.IdEmpreendimento = id;
+			int pageSize = 10;
+			int pageNumber = (page ?? 1);
+			return View(unidades.ToPagedList(pageNumber, pageSize));
+		}
+
+		// GET: Unidades/Create
+		public ActionResult Create(int? id)
+		{
+			if (id == null)
+			{
+				return View("Error");
+			}
+
+			ViewBag.Empreendimento = db.Empreendimentos.Find(id).Nome.ToString();
 			//ViewBag.UnidadeStatus = Unidades.StatusUnidade();
 			//ViewBag.Tipo = Unidades.TipoUnidade();
-			ViewBag.IDEmpreendimento = new SelectList(db.Empreendimentos, "IDEmpreendimento", "Nome");
+			ViewBag.IDEmpreendimento = new SelectList(db.Empreendimentos, "IDEmpreendimento", "Nome", id);
 			return View();
 		}
 

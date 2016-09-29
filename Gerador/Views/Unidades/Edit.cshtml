@@ -1,10 +1,8 @@
 ﻿@model Gerador.Models.Unidades
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Editar unidade";
 }
-
-<h2>Edit</h2>
 
 
 @using (Html.BeginForm())
@@ -12,10 +10,11 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Unidades</h4>
+        <h4>Editar unidade</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.IDUnidade)
+		@Html.HiddenFor(model => model.IDEmpreendimento)
 
         <div class="form-group">
             @Html.LabelFor(model => model.Numero, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -25,13 +24,13 @@
             </div>
         </div>
 
-        <div class="form-group">
+        @*<div class="form-group">
             @Html.LabelFor(model => model.IDEmpreendimento, "IDEmpreendimento", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("IDEmpreendimento", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("IDEmpreendimento", null, htmlAttributes: new { @class = "form-control", disabled="disabled"})
                 @Html.ValidationMessageFor(model => model.IDEmpreendimento, "", new { @class = "text-danger" })
             </div>
-        </div>
+        </div>*@
 
         <div class="form-group">
             @Html.LabelFor(model => model.UnidadeStatus, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -59,16 +58,16 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Salvar" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Voltar", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
 </div>
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+
 }

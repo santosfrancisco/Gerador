@@ -1,17 +1,15 @@
 ﻿@model Gerador.Models.Empreendimentos
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Informações";
 }
 
-<h2>Details</h2>
-
 <div>
-    <h4>Empreendimentos</h4>
+    <h4>Informações sobre o empreendimento</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Empresas.Nome)
+            @Html.DisplayNameFor(model => model.IDEmpresa)
         </dt>
 
         <dd>
@@ -53,6 +51,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.IDEmpreendimento }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Editar", "Edit", new { id = Model.IDEmpreendimento }, new { @class = "btn btn-primary" }) 
+    @Html.ActionLink("Voltar", "Index", null, new { @class = "btn btn-default" })
 </p>

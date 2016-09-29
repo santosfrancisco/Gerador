@@ -1,10 +1,8 @@
 ﻿@model Gerador.Models.Unidades
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Cadastro de unidades";
 }
-
-<h2>Create</h2>
 
 
 @using (Html.BeginForm()) 
@@ -12,16 +10,11 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Unidades</h4>
+        <h4>Empreendimento: @(ViewBag.Empreendimento)</h4>
         <hr />
+		<h5>Cadastrar unidades</h5>
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @*<div class="form-group">
-            @Html.LabelFor(model => model.Numero, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Numero, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Numero, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
+        @Html.HiddenFor(model => model.IDEmpreendimento)
 		<div class="form-group">
 			@Html.LabelFor(model => model.Numero, htmlAttributes: new { @class = "control-label col-md-2" })
 			<div class="col-md-10">
@@ -31,14 +24,13 @@
 			</div>
 		</div>
 
-        <div class="form-group">
+        @*<div class="form-group" hidden="hidden">
             @Html.LabelFor(model => model.IDEmpreendimento, "IDEmpreendimento", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @*@Html.DropDownList("IDEmpreendimento", null, htmlAttributes: new { @class = "form-control" })*@
-				@Html.DropDownListFor(model => model.IDEmpreendimento, ViewData["IDEmpreendimento"] as SelectList, null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.IDEmpreendimento, ViewData["IDEmpreendimento"] as SelectList, null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.IDEmpreendimento, "", new { @class = "text-danger" })
             </div>
-        </div>
+        </div>*@
 
         <div class="form-group">
             @Html.LabelFor(model => model.UnidadeStatus, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -70,7 +62,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Adicionar" class="btn btn-default" />
             </div>
         </div>
     </div>
@@ -78,7 +70,7 @@
 @*----------------------*@
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Voltar", "Index", new { htmlAttrbutes = new { @class = "btn btn-default" } })
 </div>
 
 @section Scripts {

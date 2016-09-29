@@ -45,7 +45,7 @@ namespace Gerador.Models
 		//}
 		public enum Status
 		{
-			Disponível, Vendida,Suspensa
+			Livre, Análise, Concluída, Suspensa
 		}
 		public enum Tipos
 		{

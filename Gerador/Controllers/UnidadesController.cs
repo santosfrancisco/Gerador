@@ -154,7 +154,7 @@ namespace Gerador.Controllers
 			StreamReader sr = new StreamReader(fileName);
 
 			//line = "IDEmpreendimento;IDUnidade;" + sr.ReadLine();
-			line = "IDEmpreendimento;" + sr.ReadLine();
+			line = "IDEmpreendimento;" + sr.ReadLine() + ";UnidadeStatus";
 			strArray = r.Split(line);
 
 
@@ -166,7 +166,7 @@ namespace Gerador.Controllers
 			{
 				// Adiciono o ID do empreendimento no início da linha
 				//line = id + ";;" + line;
-				line = id + ";" + line;
+				line = id + ";" + line + ";";
 
 				//row = dt.NewRow();
 
@@ -176,20 +176,20 @@ namespace Gerador.Controllers
 				if(unidade[1] == "")
 				{
 					row["IDEmpreendimento"] = id;
-					//row["IDUnidade"] = (unidade[1] == "") ? : Convert.ToInt32(unidade[1]);
+					//row["IDUnidade"] = (unidade[1] != "") ? : Convert.ToInt32(unidade[1]);
 					row["Numero"] = unidade[2];
-					row["UnidadeStatus"] = unidade[3];
-					row["Tipo"] = unidade[4];
-					row["UnidadeObservacao"] = unidade[5];
+					row["UnidadeStatus"] = 0;// unidade[3];
+					row["Tipo"] = unidade[3];
+					row["UnidadeObservacao"] = unidade[4];
 					dt.Rows.Add(row);
 				} else
 				{
 					row["IDEmpreendimento"] = id;
 					row["IDUnidade"] = Convert.ToInt32(unidade[1]);
 					row["Numero"] = unidade[2];
-					row["UnidadeStatus"] = unidade[3];
-					row["Tipo"] = unidade[4];
-					row["UnidadeObservacao"] = unidade[5];
+					//row["UnidadeStatus"] = unidade[3];
+					row["Tipo"] = unidade[3];
+					row["UnidadeObservacao"] = unidade[4];
 					dt.Rows.Add(row);
 				}
 				
@@ -222,28 +222,6 @@ namespace Gerador.Controllers
 			//Make a temp table in sql server that matches our production table
 			string tmpTable = "create table #Unidades (IDEmpreendimento int, IDUnidade int, Numero nvarchar(10), UnidadeStatus int, Tipo int, UnidadeObservacao nvarchar(100))";
 
-			//Create a datatable that matches the temp table exactly. (WARNING: order of columns must match the order in the table)
-			//DataTable table = new DataTable();
-			//table.Columns.Add(new DataColumn("IDEmpreendimento", typeof(int)));
-			//table.Columns.Add(new DataColumn("IDUnidade", typeof(int)));
-			//table.Columns.Add(new DataColumn("Numero", typeof(string)));
-			//table.Columns.Add(new DataColumn("UnidadeStatus", typeof(Unidades.Status)));
-			//table.Columns.Add(new DataColumn("Tipo", typeof(Unidades.Tipos)));
-			//table.Columns.Add(new DataColumn("UnidadeObservacao", typeof(string)));
-
-			//Add prices in our list to our DataTable
-			//foreach (Unidades unidade in dt)
-			//{
-			//	DataRow row = table.NewRow();
-			//	row["IDEmpreendimento"] = id;
-			//	row["IDUnidade"] = unidade.IDUnidade;
-			//	row["Timestamp"] = price.Timestamp;
-			//	row["Symbol"] = price.Symbol;
-			//	row["Price"] = price.Value;
-			//	row["Timestamp"] = price.Timestamp;
-			//	table.Rows.Add(row);
-			//}
-
 			//Connect to DB
 			string conString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 			using (SqlConnection con = new SqlConnection(conString))
@@ -270,7 +248,8 @@ namespace Gerador.Controllers
 				"ON TARGET.IDUnidade = SOURCE.IDUnidade " +
 				"WHEN MATCHED THEN " +
 				"UPDATE SET TARGET.Numero = SOURCE.Numero, " +
-				"TARGET.UnidadeStatus = SOURCE.UnidadeStatus " +
+				"TARGET.Tipo = SOURCE.Tipo, " +
+				"TARGET.UnidadeObservacao = SOURCE.UnidadeObservacao " +
 				"WHEN NOT MATCHED BY TARGET THEN " +
 				"INSERT (IDEmpreendimento,Numero,UnidadeStatus,Tipo,UnidadeObservacao) " +
 				"VALUES (Source.IDEmpreendimento,Source.Numero,Source.UnidadeStatus,Source.Tipo,Source.UnidadeObservacao);";
@@ -284,33 +263,6 @@ namespace Gerador.Controllers
 
 				Feedback = "Sucesso";
 			}
-			//}
- 
-
-			//using (SqlConnection conn = new SqlConnection(connString))
-			//{
-
-			//	using (var copy = new SqlBulkCopy(conn))
-			//	{
-
-
-			//		conn.Open();
-
-
-			//		copy.DestinationTableName = "Unidades";
-			//		copy.BatchSize = dt.Rows.Count;
-			//		try
-			//		{
-
-			//			copy.WriteToServer(dt);
-			//			Feedback = "Sucesso";
-			//		}
-			//		catch (Exception ex)
-			//		{
-			//			Feedback = ex.Message;
-			//		}
-			//	}
-			//}
 
 			return Feedback;
 		}

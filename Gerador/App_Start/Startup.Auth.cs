@@ -45,22 +45,22 @@ namespace IdentitySample
             // This is similar to the RememberMe option when you log in.
             app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
 
-            // Uncomment the following lines to enable logging in with third party login providers
-            //app.UseMicrosoftAccountAuthentication(
-            //    clientId: "",
-            //    clientSecret: "");
+			// Uncomment the following lines to enable logging in with third party login providers
+			//app.UseMicrosoftAccountAuthentication(
+			//    clientId: "",
+			//    clientSecret: "");
 
-            //app.UseTwitterAuthentication(
-            //   consumerKey: "",
-            //   consumerSecret: "");
+			//app.UseTwitterAuthentication(
+			//   consumerKey: "",
+			//   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+			app.UseFacebookAuthentication(
+			   appId: "1748891725362577",
+			   appSecret: "6b98b5088e40c99942bb194c3cde8d17");
 
-            //app.UseGoogleAuthentication(
-            //    clientId: "",
-            //    clientSecret: "");
-        }
+			//app.UseGoogleAuthentication(
+			//    clientId: "",
+			//    clientSecret: "");
+		}
     }
 }

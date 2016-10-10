@@ -15,6 +15,7 @@ namespace IdentitySample.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+		private ApplicationDbContext db = new ApplicationDbContext();
         public AccountController()
         {
         }
@@ -51,13 +52,25 @@ namespace IdentitySample.Controllers
 
         public ApplicationSignInManager SignInManager
         {
+
             get
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+
             }
             private set { _signInManager = value; }
         }
 
+		public string NomeUsuario()
+		{
+			var usuario = db.Users.Find(User.Identity.GetUserId());
+			string nomeUsuario = usuario.Nome;
+			if(nomeUsuario == null)
+			{
+				return usuario.Email.ToString();
+			}
+			return usuario.Nome.ToString();
+		}
         //
         // POST: /Account/Login
         [HttpPost]
@@ -69,11 +82,12 @@ namespace IdentitySample.Controllers
             {
                 return View(model);
             }
+			
+			// This doen't count login failures towards lockout only two factor authentication
+			// To enable password failures to trigger lockout, change to shouldLockout: true
+			var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
 
-            // This doen't count login failures towards lockout only two factor authentication
-            // To enable password failures to trigger lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            switch (result)
+			switch (result)
             {
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
@@ -319,7 +333,7 @@ namespace IdentitySample.Controllers
             if (loginInfo == null)
             {
                 return RedirectToAction("Login");
-            }
+            }	
 
             // Sign in the user with this external login provider if the user already has a login
             var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
@@ -335,7 +349,8 @@ namespace IdentitySample.Controllers
                 default:
                     // If the user does not have an account, then prompt the user to create an account
                     ViewBag.ReturnUrl = returnUrl;
-                    ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
+					ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+					ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
                     return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
             }
         }
@@ -360,7 +375,7 @@ namespace IdentitySample.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email , IDEmpresa = model.IDEmpresa};
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -374,7 +389,8 @@ namespace IdentitySample.Controllers
                 AddErrors(result);
             }
 
-            ViewBag.ReturnUrl = returnUrl;
+			ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+			ViewBag.ReturnUrl = returnUrl;
             return View(model);
         }
 

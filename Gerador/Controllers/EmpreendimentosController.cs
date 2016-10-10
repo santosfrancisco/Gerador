@@ -10,20 +10,40 @@ using System.Web.Mvc;
 using Gerador.Models;
 using IdentitySample.Models;
 using System.Globalization;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
 
 namespace Gerador.Controllers
 {
+	[Authorize]
     public class EmpreendimentosController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-
+		
         // GET: Empreendimentos
         public async Task<ActionResult> Index()
         {
-            var empreendimentos = db.Empreendimentos.Include(e => e.Empresas);
-            return View(await empreendimentos.ToListAsync());
+			var usuario = db.Users.Find(User.Identity.GetUserId());
+			var empresa = usuario.IDEmpresa;
+			List<Empreendimentos> empreendimentos;
+
+			if (User.IsInRole("Administrador") || User.IsInRole("Analista"))
+			{
+				empreendimentos = await db.Empreendimentos.Include(e => e.Empresas).ToListAsync();
+			} else if(User.IsInRole("Gestor") || User.IsInRole("Usuario"))
+			{
+				empreendimentos = await db.Empreendimentos.Where(e => e.IDEmpresa ==  empresa).ToListAsync();
+			} else
+			{
+				empreendimentos = null;
+				return View("AcessoNegado");
+
+			}
+            
+            return View(empreendimentos);
         }
-		// GET: Quantidade deunidades
+		// GET: Quantidade de unidades
 		public string QtdUnidades(int id)
 		{
 			var unidades = db.Unidades.Where(u => u.IDEmpreendimento == id).ToArray();
@@ -42,7 +62,7 @@ namespace Gerador.Controllers
 		// GET: Empreendimentos/Details/5
 		public async Task<ActionResult> Details(int? id)
         {
-            if (id == null)
+			if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -54,8 +74,9 @@ namespace Gerador.Controllers
             return View(empreendimentos);
         }
 
-        // GET: Empreendimentos/Create
-        public ActionResult Create()
+		// GET: Empreendimentos/Create
+		[Authorize(Roles = "Administrador")]
+		public ActionResult Create()
         {
             ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
             return View();
@@ -80,6 +101,7 @@ namespace Gerador.Controllers
         }
 
         // GET: Empreendimentos/Edit/5
+		[Authorize(Roles = "Administrador")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -113,6 +135,7 @@ namespace Gerador.Controllers
         }
 
         // GET: Empreendimentos/Delete/5
+		[Authorize(Roles = "Administrador")]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)

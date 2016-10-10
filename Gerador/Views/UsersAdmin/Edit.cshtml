@@ -1,17 +1,14 @@
 ﻿@model IdentitySample.Models.EditUserViewModel
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Editar";
 }
-
-<h2>Editar cadastro do usuário</h2>
-
 
 @using (Html.BeginForm()) {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Informações do usuário</h4>
+        <h4>Editar cadastro do usuário</h4>
         <hr />
         @Html.ValidationSummary(true)
         @Html.HiddenFor(model => model.Id)
@@ -32,11 +29,11 @@
         </div>
 		
 			<div class="form-group">
-				@Html.Label("Roles", new { @class = "control-label col-md-2" })
+				@Html.Label("Tipo de usuário", new { @class = "control-label col-md-2" })
 				<span class="col-md-10">
 					@foreach (var item in Model.RolesList)
 					{
-						<input type="radio" name="SelectedRole" value="@item.Value" checked="@item.Selected" class="checkbox-inline" />
+						<input type="radio" name="SelectedRole" value="@item.Value" checked="@item.Selected" class="radio-inline" />
 						@Html.Label(item.Value, new { @class = "control-label" })
 					}
 				</span>
@@ -45,14 +42,14 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Salvar" class="btn btn-primary" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Voltar", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
 </div>
 
 @section Scripts {

@@ -21,7 +21,6 @@ namespace Gerador.Models
 		[StringLength(80, ErrorMessage = "Nome do empreendimento deve possuir no máximo 80 caracteres")]
 		public string Nome { get; set; }
 		[Display(Name = "Habite-se")]
-		//[DataType(DataType.Date)]
 		[Required(ErrorMessage = "Data de habite-se é obrigatória")]
 		[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
 		public System.DateTime DataEntrega { get; set; }

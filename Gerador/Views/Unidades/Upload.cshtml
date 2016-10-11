@@ -26,7 +26,8 @@
 		@Html.AntiForgeryToken()
 		@Html.ValidationSummary()
 		<div class="well">
-			<span>Faça o download da planilha modelo:</span> @Html.ActionLink("Download", "PlanilhaModelo", new { id = ViewContext.RouteData.Values["id"] }, new { @class = "btn btn-default" })<br /><br />
+			<span>Faça o download da planilha modelo:</span> @Html.ActionLink("Exemplo", "PlanilhaModelo", new { id = ViewContext.RouteData.Values["id"] }, new { @class = "btn btn-default" }) |
+			@Html.ActionLink("Download", "DownloadCsv", new { id = ViewContext.RouteData.Values["id"] }, new { @class = "btn btn-default" })<br /><br />
 			<div id="mensagem" style="padding:20px" class="animated flipInX">
 				@if (ViewBag.FeedBack == "Sucesso")
 				{

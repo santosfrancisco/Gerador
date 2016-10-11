@@ -1,5 +1,5 @@
-Numero;Status;Tipo;Observação
-101;0;1;
-102;0;1;
-103;0;1;
-104;0;1;
+IDUnidade (Não remova ou altere esta coluna);Numero;Tipo;Observação
+;101;1;
+;102;1;
+;103;1;
+;104;1;

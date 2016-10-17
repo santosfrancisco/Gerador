@@ -9,18 +9,40 @@ using System.Web;
 using System.Web.Mvc;
 using Gerador.Models;
 using IdentitySample.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace Gerador.Controllers
 {
-    public class ClientesController : Controller
+	[Authorize]
+    public class ClientesController : BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+		private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Clientes
         public async Task<ActionResult> Index()
         {
-            var clientes = db.Clientes.Include(c => c.User);
-            return View(await clientes.ToListAsync());
+			var idUserLogado = User.Identity.GetUserId();
+			var userLogado = await UserManager.FindByIdAsync(idUserLogado);
+			var empresaUserLogado = userLogado.IDEmpresa;
+
+			List<Clientes> clientes;
+
+			if (User.IsInRole("Administrador") || User.IsInRole("Analista"))
+			{
+				clientes = await db.Clientes.Include(c => c.User).ToListAsync();
+			}
+			else if (User.IsInRole("Gestor"))
+			{
+				clientes = await db.Clientes.Where(c => c.User.IDEmpresa == empresaUserLogado).ToListAsync();
+			}
+			else
+			{
+
+				clientes = await db.Clientes.Where(c => c.IDUsuario == idUserLogado).ToListAsync();
+			}
+			//var clientes = db.Clientes.Include(c => c.User);
+            return View(clientes);
         }
 
         // GET: Clientes/Details/5
@@ -39,10 +61,36 @@ namespace Gerador.Controllers
         }
 
         // GET: Clientes/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            ViewBag.IDUsuario = new SelectList(db.ApplicationUsers, "Id", "Email");
-            return View();
+			var idUserLogado = User.Identity.GetUserId();
+			var userLogado = await UserManager.FindByIdAsync(idUserLogado);
+			var empresaUserLogado = userLogado.IDEmpresa;
+
+			if (User.IsInRole("Administrador") || User.IsInRole("Analista"))
+			{
+				ViewBag.IDUsuario = new SelectList(db.Users, "Id", "UsuarioFull", idUserLogado);
+			}
+			else if (User.IsInRole("Gestor"))
+			{
+				ViewBag.IDUsuario = new SelectList(db.Users.Where(u => u.IDEmpresa == empresaUserLogado), "Id", "UsuarioFull", idUserLogado);
+			}
+			else
+			{
+
+				ViewBag.IDUsuario = new SelectList(db.Users.Where(u => u.Id == idUserLogado), "Id", "UsuarioFull", idUserLogado);
+			}
+
+			// lista de tipos de pessoa
+			ViewBag.TipoPessoa = Clientes.ListaTipo();
+			// lista sexos
+			ViewBag.Sexo = Clientes.ListaSexo();
+			// lista de estados civis
+			ViewBag.EstadoCivil = Clientes.ListaEstadoCivil();
+			// lista de regimes de casamento
+			ViewBag.RegimeCasamento = Clientes.ListaRegimeCasamento();
+
+			return View();
         }
 
         // POST: Clientes/Create
@@ -59,24 +107,83 @@ namespace Gerador.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.IDUsuario = new SelectList(db.ApplicationUsers, "Id", "Email", clientes.IDUsuario);
-            return View(clientes);
+			var idUserLogado = User.Identity.GetUserId();
+			var userLogado = await UserManager.FindByIdAsync(idUserLogado);
+			var empresaUserLogado = userLogado.IDEmpresa;
+
+			if (User.IsInRole("Administrador") || User.IsInRole("Analista"))
+			{
+				ViewBag.IDUsuario = new SelectList(db.Users, "Id", "UsuarioFull", clientes.IDUsuario);
+			}
+			else if (User.IsInRole("Gestor"))
+			{
+				ViewBag.IDUsuario = new SelectList(db.Users.Where(u => u.IDEmpresa == empresaUserLogado), "Id", "UsuarioFull", clientes.IDUsuario);
+			}
+			else
+			{
+
+				ViewBag.IDUsuario = new SelectList(db.Users.Where(u => u.Id == idUserLogado), "Id", "UsuarioFull", clientes.IDUsuario);
+			}
+			// lista de tipos de pessoa
+			ViewBag.TipoPessoa = Clientes.ListaTipo();
+			// lista sexos
+			ViewBag.Sexo = Clientes.ListaSexo();
+			// lista de estados civis
+			ViewBag.EstadoCivil = Clientes.ListaEstadoCivil();
+			// lista de regimes de casamento
+			ViewBag.RegimeCasamento = Clientes.ListaRegimeCasamento();
+			return View(clientes);
         }
 
         // GET: Clientes/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
-            if (id == null)
+
+			var idUserLogado = User.Identity.GetUserId();
+			var userLogado = await UserManager.FindByIdAsync(idUserLogado);
+			var empresaUserLogado = userLogado.IDEmpresa;
+
+			if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Clientes clientes = await db.Clientes.FindAsync(id);
+
             if (clientes == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.IDUsuario = new SelectList(db.ApplicationUsers, "Id", "Email", clientes.IDUsuario);
-            return View(clientes);
+
+			if (User.IsInRole("Administrador") || User.IsInRole("Analista"))
+			{
+				ViewBag.IDUsuario = new SelectList(db.Users, "Id", "UsuarioFull", clientes.IDUsuario);
+			}
+			else if (User.IsInRole("Gestor"))
+			{
+				if(empresaUserLogado != db.Clientes.Find(id).User.IDEmpresa)
+				{
+					return View("AcessoNegado");
+				}
+				ViewBag.IDUsuario = new SelectList(db.Users.Where(u => u.IDEmpresa == empresaUserLogado), "Id", "UsuarioFull", clientes.IDUsuario);
+			}
+			else
+			{
+				if (idUserLogado != db.Clientes.Find(id).IDUsuario)
+				{
+					return View("AcessoNegado");
+				}
+				ViewBag.IDUsuario = new SelectList(db.Users.Where(u => u.Id == idUserLogado), "Id", "UsuarioFull", clientes.IDUsuario);
+			}
+			// lista de tipos de pessoa
+			ViewBag.TipoPessoa = Clientes.ListaTipo();
+			// lista sexos
+			ViewBag.Sexo = Clientes.ListaSexo();
+			// lista de estados civis
+			ViewBag.EstadoCivil = Clientes.ListaEstadoCivil();
+			// lista de regimes de casamento
+			ViewBag.RegimeCasamento = Clientes.ListaRegimeCasamento();
+			return View(clientes);
         }
 
         // POST: Clientes/Edit/5
@@ -92,8 +199,32 @@ namespace Gerador.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.IDUsuario = new SelectList(db.ApplicationUsers, "Id", "Email", clientes.IDUsuario);
-            return View(clientes);
+			var idUserLogado = User.Identity.GetUserId();
+			var userLogado = await UserManager.FindByIdAsync(idUserLogado);
+			var empresaUserLogado = userLogado.IDEmpresa;
+
+			if (User.IsInRole("Administrador") || User.IsInRole("Analista"))
+			{
+				ViewBag.IDUsuario = new SelectList(db.Users, "Id", "UsuarioFull", clientes.IDUsuario);
+			}
+			else if (User.IsInRole("Gestor"))
+			{
+				ViewBag.IDUsuario = new SelectList(db.Users.Where(u => u.IDEmpresa == empresaUserLogado), "Id", "UsuarioFull", clientes.IDUsuario);
+			}
+			else
+			{
+
+				ViewBag.IDUsuario = new SelectList(db.Users.Where(u => u.Id == idUserLogado), "Id", "UsuarioFull", clientes.IDUsuario);
+			}
+			// lista de tipos de pessoa
+			ViewBag.TipoPessoa = Clientes.ListaTipo();
+			// lista sexos
+			ViewBag.Sexo = Clientes.ListaSexo();
+			// lista de estados civis
+			ViewBag.EstadoCivil = Clientes.ListaEstadoCivil();
+			// lista de regimes de casamento
+			ViewBag.RegimeCasamento = Clientes.ListaRegimeCasamento();
+			return View(clientes);
         }
 
         // GET: Clientes/Delete/5

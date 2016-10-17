@@ -5,6 +5,7 @@
 /// <reference path="cldr/event.js" />
 /// <reference path="cldr/supplemental.js" />
 /// <reference path="cldr/unresolved.js" />
+/// <reference path="clientes.js" />
 /// <reference path="globalize/currency.js" />
 /// <reference path="globalize/date.js" />
 /// <reference path="globalize/message.js" />

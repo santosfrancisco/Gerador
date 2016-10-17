@@ -1,46 +1,46 @@
 ﻿@model IdentitySample.Models.IndexViewModel
 @{
-    ViewBag.Title = "Manage your account";
+    ViewBag.Title = "Gerenciar conta";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.Title</h2>
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div class="row">
     <div class="col-md-8">
         <p>
             @if (Model.HasPassword)
             {
-                @Html.ActionLink("Change your password", "ChangePassword")
+                @Html.ActionLink("Trocar senha", "ChangePassword")
             }
             else
             {
-                @Html.ActionLink("Pick a password", "SetPassword")
+                @Html.ActionLink("Definir uma senha", "SetPassword")
             }
         </p>
         <p>
-            Phone Number: @(Model.PhoneNumber ?? "None") [
+            Telefone: @(Model.PhoneNumber ?? "None") [
             @if (Model.PhoneNumber != null)
             {
-                @Html.ActionLink("Change", "AddPhoneNumber")
+                @Html.ActionLink("Alterar", "AddPhoneNumber")
                 @: &nbsp;|&nbsp;
-                @Html.ActionLink("Remove", "RemovePhoneNumber")
+                @Html.ActionLink("Remover", "RemovePhoneNumber")
             }
             else
             {
-                @Html.ActionLink("Add", "AddPhoneNumber")
+                @Html.ActionLink("Adicionar", "AddPhoneNumber")
             }
             ]
         </p>
-        <p>
+        @*<p>
             External Logins: @Model.Logins.Count
             @Html.ActionLink("[Manage]", "ManageLogins")
-        </p>
+        </p>*@
         @if (Model.TwoFactor)
         {
             <form method="post" action="/Manage/DisableTFA">
                 <p>
-                    Two factor is currently enabled:
-                    <input type="submit" value="Disable" class="btn btn-default"/>
+                    Verificação em duas etapas ATIVA:
+                    <input type="submit" value="Inativar" class="btn btn-default"/>
                 </p>
             </form>
         }
@@ -48,12 +48,12 @@
         {
             <form method="post" action="/Manage/EnableTFA">
                 <p>
-                    Two factor is currently disabled:
-                    <input type="submit" value="Enable" class="btn btn-default"/>
+					Verificação em duas etapas INATIVA:
+                    <input type="submit" value="Ativar" class="btn btn-default"/>
                 </p>
             </form>
         }
-        @if (Model.BrowserRemembered)
+        @*@if (Model.BrowserRemembered)
         {
             <form method="post" action="/Manage/ForgetBrowser">
                 <p>
@@ -71,5 +71,5 @@
                 </p>
             </form>
         }
-    </div>
+    </div>*@
 </div>

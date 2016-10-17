@@ -48,7 +48,7 @@ namespace IdentitySample
 
 			bundles.Add(new StyleBundle("~/Content/css").Include(
 						"~/Content/bootstrap.css",
-					  //"~/Content/themes/PaperTheme.css",
+					  //"~/Content/YetiTheme.min.css",
 					  "~/Content/jquery-confirm.css",
 					  "~/Content/site.css",
 					  "~/Content/animate.css"));

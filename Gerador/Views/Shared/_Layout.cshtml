@@ -8,7 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -21,12 +21,14 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Sobre", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contato", "Contact", "Home")</li>
+                    @*<li>@Html.ActionLink("Sobre", "About", "Home")</li>*@
+                    @*<li>@Html.ActionLink("Contato", "Contact", "Home")</li>*@
+					<li>@Html.ActionLink("Administração", "Administracao", "Home")</li>
+					<li>@Html.ActionLink("Clientes", "Index", "Clientes")</li>
 
                     @if (Request.IsAuthenticated && User.IsInRole("Administrador")) {
-                        <li>@Html.ActionLink("RolesAdmin", "Index", "RolesAdmin")</li>
-                        <li>@Html.ActionLink("UsersAdmin", "Index", "UsersAdmin")</li>
+                        <li>@Html.ActionLink("Permissões", "Index", "RolesAdmin")</li>
+                        <li>@Html.ActionLink("Usuários", "Index", "UsersAdmin")</li>
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")
@@ -39,7 +41,11 @@
 		</div>
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            @*<p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>*@
+			<div class="panel panel-collapse" style="text-align:center">
+				<img src="~/Content/logo.jpg" /><br />
+				<span class=""><span class="glyphicon glyphicon-phone-alt"></span> 11-50817969<br /><span class="glyphicon glyphicon-envelope"></span> analistas@isibr.com.br</span>
+			</div>
         </footer>
     </div>
 

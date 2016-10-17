@@ -275,7 +275,7 @@ namespace Gerador.Controllers
 
 			List<Unidades> unidades = new List<Unidades>();
 			//Cria a tabela temporária que receberá as unidades da planilha
-			string tmpTable = "create table #Unidades (IDEmpreendimento int, IDUnidade int, Numero nvarchar(10), UnidadeStatus int, Tipo int, UnidadeObservacao nvarchar(100))";
+			string tmpTable = "create table #Unidades (IDEmpreendimento int, IDUnidade int, Numero nvarchar(10), Tipo int, UnidadeObservacao nvarchar(100), UnidadeStatus int)";
 
 			//ConnectionString
 			string conString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;

@@ -15,7 +15,8 @@ namespace Gerador.Models
             this.Usuarios = new HashSet<ApplicationUser>();
         }
 		[Key]
-        public int IDEmpresa { get; set; }
+		[Display(Name = "Empresa")]
+		public int IDEmpresa { get; set; }
 		[Required]
 		[StringLength(80, ErrorMessage = "O {0} deve ter pelo menos {2} caracteres.", MinimumLength = 3)]
 		[Display(Name = "Nome")]

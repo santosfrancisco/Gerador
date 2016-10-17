@@ -7,10 +7,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using IdentitySample.Models;
 using System.Data.Entity;
+using Gerador.Controllers;
 
 namespace IdentitySample.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
 		private ApplicationDbContext db = new ApplicationDbContext();
 		public async Task<ActionResult> Index(int? page, string searchString, string currentFilter)
@@ -53,6 +54,11 @@ namespace IdentitySample.Controllers
 			int pageSize = 5;
 			int pageNumber = (page ?? 1);
 			return View(empreendimentos.ToPagedList(pageNumber, pageSize));
+		}
+
+		public ActionResult Administracao()
+		{
+			return View();
 		}
 
         [Authorize]

@@ -1,0 +1,71 @@
+﻿
+@{
+	ViewBag.Title = "Administracao";
+}
+
+<h4>Administração</h4>
+
+	<div id="menus" class="col-md-12">
+		<div class="row">
+			<div id="gerUsuarios" class="col-md-6" onclick="window.location = '/UsersAdmin/Index'; return false;" style="cursor:pointer">
+				<div class="media panel panel-body card">
+					<a class="pull-left" href="#">
+						<span class="glyphicon glyphicon-user"></span>
+					</a>
+					<div class="media-body">
+
+						<h5 class="media-heading"><b>Gerenciar Usuários</b></h5>
+
+						Cadastrar, Editar e Remover usuários do sistema.
+
+					</div>
+				</div>
+			</div>
+
+			<div id="gerPermissoes" class="col-md-6" onclick="window.location = '/RolesAdmin/Index'; return false;" style="cursor:pointer">
+				<div class="media panel panel-body card">
+					<a class="pull-left" href="#">
+						<span class="glyphicon glyphicon-lock"></span>
+					</a>
+					<div class="media-body">
+
+						<h5 class="media-heading"><b>Gerenciar Permissões</b></h5>
+
+						Manipule os perfis de acesso.
+
+					</div>
+				</div>
+			</div>
+
+			<div id="gerEmpresas" class="col-md-6" onclick="window.location = '/Empresas/Index'; return false;" style="cursor:pointer">
+				<div class="media panel panel-body card">
+					<a class="pull-left" href="#">
+						<span class="glyphicon glyphicon-briefcase"></span>
+					</a>
+					<div class="media-body">
+
+						<h5 class="media-heading"><b>Gerenciar Empresas</b></h5>
+
+						Cadastro e gerenciamento de empresas cadastradas no sistema.
+
+					</div>
+				</div>
+			</div>
+
+			<div id="gerClientes" class="col-md-6" onclick="window.location = '/Clientes/Index'; return false;" style="cursor:pointer">
+				<div class="media panel panel-body card">
+					<a class="pull-left" href="#">
+						<span class="glyphicon glyphicon-earphone"></span>
+					</a>
+					<div class="media-body">
+
+						<h5 class="media-heading"><b>Gerenciar Clientes</b></h5>
+
+						Cadastro e gerenciamento de clientes no sistema.
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+

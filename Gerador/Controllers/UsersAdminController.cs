@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Gerador.Models;
+using PagedList;
 
 namespace IdentitySample.Controllers
 {
@@ -54,12 +55,42 @@ namespace IdentitySample.Controllers
             }
         }
 
+		// GET: Empresa usuario logado
+		public async Task<int> GetEmpresa(string id)
+		{
+			var usuario = await UserManager.FindByIdAsync(id);
+
+			return usuario.IDEmpresa;
+
+		}
+
         //
         // GET: /Users/
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? page, string searchString, string currentFilter)
         {
-            return View(await UserManager.Users.ToListAsync());
-        }
+			//var usuarios = await UserManager.Users.ToListAsync();
+			List<ApplicationUser> usuarios = await UserManager.Users.ToListAsync() ;
+			if (!String.IsNullOrEmpty(searchString))
+			{
+				page = 1;
+				usuarios = usuarios.Where(e => e.Nome.ToUpper().Contains(searchString.ToUpper()) || e.Email.ToUpper().Contains(searchString.ToUpper())).ToList();
+			}
+			else
+			{
+				searchString = currentFilter;
+			}
+			ViewBag.CurrentFilter = searchString;
+
+			//if (!String.IsNullOrEmpty(searchString))
+			//{
+			//	usuarios = usuarios.Where(e => e.Nome.ToUpper().Contains(searchString.ToUpper()) || e.Email == searchString.ToUpper()).ToList();
+			//}
+
+			int pageSize = 5;
+			int pageNumber = (page ?? 1);
+			return View(usuarios.ToPagedList(pageNumber, pageSize));
+			//return View(await UserManager.Users.ToListAsync());
+		}
 
         //
         // GET: /Users/Details/5

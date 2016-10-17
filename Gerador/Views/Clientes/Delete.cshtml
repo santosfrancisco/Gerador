@@ -8,104 +8,65 @@
     <h4>Remover cliente</h4>
     <hr />
 	<h5 class="text-danger">Deseja realmente remover este cliente?</h5>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.User.Email)
-        </dt>
+	<dl class="dl-horizontal">
+		<dt>
+			<span>Responsável</span>
+			@*@Html.DisplayNameFor(model => model.User.Email)*@
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.User.Email)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.User.Email)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TipoPessoa)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.TipoPessoa)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.TipoPessoa)
-        </dd>
+		<dd>
+			@if (Model.TipoPessoa == 0)
+			{
+				<span>Pessoa Física</span>
+			}
+			else
+			{
+				<span>Pessoa Jurídica</span>
+			}
+			@*@Html.DisplayFor(model => model.TipoPessoa)*@
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Nome)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.Nome)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Nome)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.Nome)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CpfCnpj)
-        </dt>
+		<dt>
+			@if (Model.TipoPessoa == 0)
+			{
+				<span>CPF</span>
+			}
+			else
+			{
+				<span>CNPJ</span>
+			}
+			@*@Html.DisplayNameFor(model => model.CpfCnpj)*@
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CpfCnpj)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.CpfCnpj)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Sexo)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.Renda)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Sexo)
-        </dd>
+		<dd>
+			R$ @Html.DisplayFor(model => model.Renda)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Profissao)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Profissao)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DataNascimento)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DataNascimento)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Renda)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Renda)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EstadoCivil)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EstadoCivil)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.RegimeCasamento)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RegimeCasamento)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Conjuge_Cpf)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Conjuge_Cpf)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Conjuge_Nome)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Conjuge_Nome)
-        </dd>
-
-    </dl>
+	</dl>
 
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Collections;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace IdentitySample.Models
 {

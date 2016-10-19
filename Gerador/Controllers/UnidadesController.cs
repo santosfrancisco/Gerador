@@ -19,7 +19,7 @@ using System.Text;
 
 namespace Gerador.Controllers
 {
-	public class UnidadesController : Controller
+	public class UnidadesController : BaseController
 	{
 		private ApplicationDbContext db = new ApplicationDbContext();
 
@@ -158,7 +158,10 @@ namespace Gerador.Controllers
 			{
 				return View();
 			}
+
+			ViewBag.OK = true;
 			ViewBag.FeedBack = "Aviso";
+			ViewBag.Empreendimento = db.Empreendimentos.Find(id).Nome.ToString();
 			DataTable dt = new DataTable();
 
 
@@ -176,14 +179,15 @@ namespace Gerador.Controllers
 
 						dt = ProcessCSV(path, id);
 
-
-						ViewBag.FeedBack = ProcessBulkCopy(dt);
+						if (ViewBag.Ok)
+						{
+							ViewBag.FeedBack = ProcessBulkCopy(dt);
+						}
 					}
 					catch (Exception ex)
 					{
 
 						ViewBag.FeedBack = ex.Message;
-						dt.Dispose();
 					}
 				}
 				else
@@ -203,10 +207,9 @@ namespace Gerador.Controllers
 			return View();
 		}
 
-		private static DataTable ProcessCSV(string fileName, int? id)
+		private  DataTable ProcessCSV(string fileName, int? id)
 		{
-
-			string Feedback = string.Empty;
+			//string Feedback = string.Empty;
 			string line = string.Empty;
 			string[] strArray;
 
@@ -229,35 +232,45 @@ namespace Gerador.Controllers
 			
 			line = "IDEmpreendimento;" + sr.ReadLine() + ";UnidadeStatus";
 			strArray = r.Split(line);
-			
-			while ((line = sr.ReadLine()) != null)
+
+			try
 			{
-				// Adiciono o ID do empreendimento no início da linha
-				line = id + ";" + line + ";";
-
-				var unidade = r.Split(line);
-
-				DataRow row = dt.NewRow();
-				if (unidade[1] == "")
+				while ((line = sr.ReadLine()) != null)
 				{
-					row["IDEmpreendimento"] = id;
-					row["Numero"] = unidade[2];
-					row["UnidadeStatus"] = 0;// 0 = status Livre
-					row["Tipo"] = unidade[3];
-					row["UnidadeObservacao"] = unidade[4];
-					dt.Rows.Add(row);
+					// Adiciono o ID do empreendimento no início da linha
+					line = id + ";" + line + ";";
+
+					var unidade = r.Split(line);
+
+					DataRow row = dt.NewRow();
+					if (unidade[1] == "")
+					{
+						row["IDEmpreendimento"] = id;
+						row["Numero"] = unidade[2];
+						row["UnidadeStatus"] = 0;// 0 = status Livre
+						row["Tipo"] = unidade[3];
+						row["UnidadeObservacao"] = unidade[4];
+						dt.Rows.Add(row);
+					}
+					else
+					{
+						row["IDEmpreendimento"] = id;
+						row["IDUnidade"] = Convert.ToInt32(unidade[1]);
+						row["Numero"] = unidade[2];
+						row["Tipo"] = unidade[3];
+						row["UnidadeObservacao"] = unidade[4];
+						dt.Rows.Add(row);
+					}
+
 				}
-				else
-				{
-					row["IDEmpreendimento"] = id;
-					row["IDUnidade"] = Convert.ToInt32(unidade[1]);
-					row["Numero"] = unidade[2];
-					row["Tipo"] = unidade[3];
-					row["UnidadeObservacao"] = unidade[4];
-					dt.Rows.Add(row);
-				}
-				
 			}
+			catch(Exception ex)
+			{
+				ViewBag.OK = false;
+				ViewBag.FeedBack = ex.Message;
+				dt.Dispose();
+			}
+			
 
 
 			sr.Dispose();
@@ -282,43 +295,50 @@ namespace Gerador.Controllers
 			using (SqlConnection con = new SqlConnection(conString))
 			{
 				con.Open();
-
-				//Executa o cmd para criar a tabela temporária
-				SqlCommand cmd = new SqlCommand(tmpTable, con);
-				cmd.ExecuteNonQuery();
-
-				//Insere os dados da Dt na tabela temporaria #unidades
-				using (SqlBulkCopy bulk = new SqlBulkCopy(con))
+				try
 				{
-					bulk.DestinationTableName = "#Unidades";
-					bulk.WriteToServer(dt);
+					//Executa o cmd para criar a tabela temporária
+					SqlCommand cmd = new SqlCommand(tmpTable, con);
+					cmd.ExecuteNonQuery();
+
+					//Insere os dados da Dt na tabela temporaria #unidades
+					using (SqlBulkCopy bulk = new SqlBulkCopy(con))
+					{
+						bulk.DestinationTableName = "#Unidades";
+						bulk.WriteToServer(dt);
+					}
+
+					//Merge para atualizar as unidades que existem e inserir as que nao existem
+					string mergeSql =
+
+					"SET IDENTITY_INSERT Unidades OFF " +
+					"MERGE Unidades AS TARGET " +
+					"USING #Unidades AS SOURCE " +
+					"ON TARGET.IDUnidade = SOURCE.IDUnidade " +
+					"WHEN MATCHED THEN " +
+					"UPDATE SET TARGET.Numero = SOURCE.Numero, " +
+					"TARGET.Tipo = SOURCE.Tipo, " +
+					"TARGET.UnidadeObservacao = SOURCE.UnidadeObservacao " +
+					"WHEN NOT MATCHED BY TARGET THEN " +
+					"INSERT (IDEmpreendimento,Numero,UnidadeStatus,Tipo,UnidadeObservacao) " +
+					"VALUES (Source.IDEmpreendimento,Source.Numero,Source.UnidadeStatus,Source.Tipo,Source.UnidadeObservacao);";
+
+					cmd.CommandText = mergeSql;
+					cmd.ExecuteNonQuery();
+
+					//Drop na tabela temporária
+					cmd.CommandText = "drop table #Unidades";
+					cmd.ExecuteNonQuery();
+
+					Feedback = "Sucesso";
 				}
+				catch (Exception ex)
+				{
 
-				//Merge para atualizar as unidades que existem e inserir as que nao existem
-				string mergeSql =
-
-				"SET IDENTITY_INSERT Unidades OFF " +
-				"MERGE Unidades AS TARGET " +
-				"USING #Unidades AS SOURCE " +
-				"ON TARGET.IDUnidade = SOURCE.IDUnidade " +
-				"WHEN MATCHED THEN " +
-				"UPDATE SET TARGET.Numero = SOURCE.Numero, " +
-				"TARGET.Tipo = SOURCE.Tipo, " +
-				"TARGET.UnidadeObservacao = SOURCE.UnidadeObservacao " +
-				"WHEN NOT MATCHED BY TARGET THEN " +
-				"INSERT (IDEmpreendimento,Numero,UnidadeStatus,Tipo,UnidadeObservacao) " +
-				"VALUES (Source.IDEmpreendimento,Source.Numero,Source.UnidadeStatus,Source.Tipo,Source.UnidadeObservacao);";
-
-				cmd.CommandText = mergeSql;
-				cmd.ExecuteNonQuery();
-
-				//Drop na tabela temporária
-				cmd.CommandText = "drop table #Unidades";
-				cmd.ExecuteNonQuery();
-
-				Feedback = "Sucesso";
+					Feedback = ex.Message;
+				}
 			}
-
+			
 			return Feedback;
 		}
 

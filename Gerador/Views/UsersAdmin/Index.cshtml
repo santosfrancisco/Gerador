@@ -48,6 +48,9 @@
 				@*@Html.DisplayNameFor(model => model.IDEmpresa)*@
 				<span>Empresa</span>
 			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.First().Roles)
+			</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -79,7 +82,10 @@
 				<td>
 					@Html.DisplayFor(modelItem => item.Empresas.Nome)
 				</td>
-			</tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Roles)
+					</td>
+					</tr>
 		}
 
 	</tbody>

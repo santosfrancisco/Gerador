@@ -17,7 +17,7 @@ using Microsoft.Owin.Security;
 namespace Gerador.Controllers
 {
 	[Authorize]
-    public class EmpreendimentosController : Controller
+    public class EmpreendimentosController : BaseController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 		

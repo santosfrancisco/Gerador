@@ -9,11 +9,12 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Gerador.Controllers;
 
 namespace IdentitySample.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
 		private ApplicationDbContext db = new ApplicationDbContext();
         public AccountController()

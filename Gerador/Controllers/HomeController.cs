@@ -8,12 +8,15 @@ using System.Threading.Tasks;
 using IdentitySample.Models;
 using System.Data.Entity;
 using Gerador.Controllers;
+using Gerador.Filtros;
 
 namespace IdentitySample.Controllers
 {
+	
     public class HomeController : BaseController
     {
 		private ApplicationDbContext db = new ApplicationDbContext();
+		[Authorize]
 		public async Task<ActionResult> Index(int? page, string searchString, string currentFilter)
         {
 			List<Empreendimentos> empreendimentos = await db.Empreendimentos.ToListAsync();
@@ -56,6 +59,7 @@ namespace IdentitySample.Controllers
 			return View(empreendimentos.ToPagedList(pageNumber, pageSize));
 		}
 
+		
 		public ActionResult Administracao()
 		{
 			return View();
@@ -69,7 +73,12 @@ namespace IdentitySample.Controllers
             return View();
         }
 
-        public ActionResult Contact()
+		public ActionResult AcessoNegado()
+		{
+			return View("AcessoNegado");
+		}
+
+		public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
 

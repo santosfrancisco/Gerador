@@ -11,11 +11,13 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Gerador.Models;
+using Gerador.Controllers;
 using PagedList;
+using Gerador.Filtros;
 
 namespace IdentitySample.Controllers
 {
-    [Authorize(Roles = "Administrador")]
+    [Authorize]
     public class UsersAdminController : Controller
     {
 		public ApplicationDbContext db = new ApplicationDbContext();
@@ -63,7 +65,13 @@ namespace IdentitySample.Controllers
 			return usuario.IDEmpresa;
 
 		}
+		public void GetPerfil(string id)
+		{
 
+			var roles = UserManager.GetRoles(id);
+			
+			
+		}
         //
         // GET: /Users/
         public async Task<ActionResult> Index(int? page, string searchString, string currentFilter)
@@ -110,6 +118,7 @@ namespace IdentitySample.Controllers
 
         //
         // GET: /Users/Create
+		[FiltroPermissao(Roles = "Administrador, Analista, Gestor")]
         public async Task<ActionResult> Create()
         {
             //Get the list of Roles
@@ -179,6 +188,7 @@ namespace IdentitySample.Controllers
 			return View(new EditUserViewModel()
             {
                 Id = user.Id,
+				Nome = user.Nome,
                 Email = user.Email,
                 RolesList = RoleManager.Roles.ToList().Select(x => new SelectListItem()
                 {

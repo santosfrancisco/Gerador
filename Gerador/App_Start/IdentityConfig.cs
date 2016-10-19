@@ -101,13 +101,13 @@ namespace IdentitySample.Models
     }
 
     // This is useful if you do not want to tear down the database each time you run the application.
-    // public class ApplicationDbInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
+     //public class ApplicationDbInitializer : DropCreateDatabaseAlways<ApplicationDbContext>
     // This example shows you how to create a new database if the Model changes
     public class ApplicationDbInitializer : DropCreateDatabaseIfModelChanges<ApplicationDbContext> 
     {
         protected override void Seed(ApplicationDbContext context) {
-            InitializeIdentityForEF(context);
-            base.Seed(context);
+			InitializeIdentityForEF(context);
+			base.Seed(context);
         }
 
         //Create User=Admin@Admin.com with password=Admin@123456 in the Admin role        
@@ -125,9 +125,9 @@ namespace IdentitySample.Models
                 var roleresult = roleManager.Create(role);
             }
 
-            var user = userManager.FindByName(name);
+			var user = userManager.FindByName(name);
             if (user == null) {
-                user = new ApplicationUser { UserName = name, Email = name };
+                user = new ApplicationUser { UserName = name, Email = name, IDEmpresa = 1, Nome = "Admin"};
                 var result = userManager.Create(user, password);
                 result = userManager.SetLockoutEnabled(user.Id, false);
             }

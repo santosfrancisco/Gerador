@@ -15,9 +15,10 @@
 	</ul>
 	<h4>Informações sobre as colunas da planilha</h4>
 	<ul>
-		<li>Numero: aceita números e letras (ex. 101 ou U101)</li>
-		<li>Status: 0 (zero) para DISPONÍVEL ou 1 (um) para VENDIDA.</li>
-		<li>Observacao: (Opcional) Um pequeno texto com alguma observação sobre a unidade.</li>
+		<li><b>IDUnidade:</b> NÃO mexer nessa coluna</li>
+		<li><b>Numero:</b> aceita números e letras (ex. 101 ou A101)</li>
+		<li><b>Tipo:</b> 0 (zero) para RESIDENCIAL ou 1 (um) para COMERCIAL.</li>
+		<li><b>Observacao:</b> <em>(Opcional)</em> Um pequeno texto com alguma observação sobre a unidade.</li>
 	</ul>
 </div>
 
@@ -55,7 +56,7 @@
 				}
 			</div>
 			<span><b>Selecione a planilha em formato CSV no seu computador.</b></span><br /><br />
-			<input type="file" required name="FileUpload" id="FileUpload" /><br />
+			<input type="file" required name="FileUpload" id="FileUpload" accept=".csv" /><br />
 			<input type="hidden" id="OK" name="OK" value="false" />
 			<input type="button" name="Submit" id="Submit" value="Importar unidades" class="btn btn-primary confirm" /><br />
 
@@ -92,8 +93,8 @@
 						$('#importar').submit();
 					},
 					cancel: function () {
-						$('#OK').val(false);
-						$('#importar').submit();
+						//$('#OK').val(false);
+						//$('#importar').submit();
 					}
 				});
 			});

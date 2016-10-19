@@ -234,20 +234,9 @@
     <Compile Include="Controllers\RolesAdminController.cs" />
     <Compile Include="Controllers\UnidadesController.cs" />
     <Compile Include="Controllers\UsersAdminController.cs" />
+    <Compile Include="Filtros\FiltroPermissao.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609170140196_Inicial.cs" />
-    <Compile Include="Migrations\201609170140196_Inicial.Designer.cs">
-      <DependentUpon>201609170140196_Inicial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609230148433_initial.cs" />
-    <Compile Include="Migrations\201609230148433_initial.Designer.cs">
-      <DependentUpon>201609230148433_initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609230216027_alteracaoBanco.cs" />
-    <Compile Include="Migrations\201609230216027_alteracaoBanco.Designer.cs">
-      <DependentUpon>201609230216027_alteracaoBanco.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -418,7 +407,6 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\UsersAdmin\Index.cshtml" />
-    <Content Include="Views\UsersAdmin\Edit.cshtml" />
     <Content Include="Views\UsersAdmin\Details.cshtml" />
     <Content Include="Views\UsersAdmin\Delete.cshtml" />
     <Content Include="Views\UsersAdmin\Create.cshtml" />
@@ -454,27 +442,16 @@
     <Content Include="Scripts\jquery.validate.globalize.min.js.map" />
     <Content Include="Views\Shared\AcessoNegado.cshtml" />
     <Content Include="Views\Home\Administracao.cshtml" />
+    <Content Include="Views\UsersAdmin\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\planilhas\" />
     <Folder Include="App_Data\uploads\" />
-    <Folder Include="Filtros\" />
     <Folder Include="Repositorios\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201609170140196_Inicial.resx">
-      <DependentUpon>201609170140196_Inicial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609230148433_initial.resx">
-      <DependentUpon>201609230148433_initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609230216027_alteracaoBanco.resx">
-      <DependentUpon>201609230216027_alteracaoBanco.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

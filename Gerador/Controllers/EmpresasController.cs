@@ -12,8 +12,8 @@ using IdentitySample.Models;
 
 namespace Gerador.Controllers
 {
-	[Authorize(Roles = "Admin")]
-    public class EmpresasController : Controller
+	[Authorize]
+    public class EmpresasController : BaseController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 

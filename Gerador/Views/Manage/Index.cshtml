@@ -1,4 +1,4 @@
-﻿@model IdentitySample.Models.IndexViewModel
+﻿@model Gerador.Models.IndexViewModel
 @{
     ViewBag.Title = "Gerenciar conta";
 }
@@ -7,6 +7,9 @@
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div class="row">
     <div class="col-md-8">
+        <p>
+            @Html.ActionLink("Meus Dados", "MeusDados", new { @id = ViewBag.UserId })
+        </p>
         <p>
             @if (Model.HasPassword)
             {
@@ -35,12 +38,12 @@
             External Logins: @Model.Logins.Count
             @Html.ActionLink("[Manage]", "ManageLogins")
         </p>*@
-        @if (Model.TwoFactor)
+        @*@if (Model.TwoFactor)
         {
             <form method="post" action="/Manage/DisableTFA">
                 <p>
                     Verificação em duas etapas ATIVA:
-                    <input type="submit" value="Inativar" class="btn btn-default"/>
+                    <input type="submit" value="Inativar" class="btn btn-default btn-xs"/>
                 </p>
             </form>
         }
@@ -49,10 +52,10 @@
             <form method="post" action="/Manage/EnableTFA">
                 <p>
 					Verificação em duas etapas INATIVA:
-                    <input type="submit" value="Ativar" class="btn btn-default"/>
+                    <input type="submit" value="Ativar" class="btn btn-default btn-xs"/>
                 </p>
             </form>
-        }
+        }*@
         @*@if (Model.BrowserRemembered)
         {
             <form method="post" action="/Manage/ForgetBrowser">

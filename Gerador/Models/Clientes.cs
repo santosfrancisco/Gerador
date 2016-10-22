@@ -1,7 +1,7 @@
 
 namespace Gerador.Models
 {
-	using IdentitySample.Models;
+	using Gerador.Models;
 	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel.DataAnnotations;

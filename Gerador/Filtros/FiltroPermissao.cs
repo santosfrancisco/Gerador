@@ -11,15 +11,16 @@ namespace Gerador.Filtros
 		public override void OnAuthorization(AuthorizationContext filterContext)
 		{
 			base.OnAuthorization(filterContext);
-			
-			if (filterContext.Result is HttpUnauthorizedResult)
+            var redir = "?returnUrl=" + HttpContext.Current.Request.Url.PathAndQuery;
+
+            if (filterContext.Result is HttpUnauthorizedResult)
 			{
 				if (HttpContext.Current.User.Identity.IsAuthenticated)
 				{
 					filterContext.HttpContext.Response.Redirect("/Home/AcessoNegado", true);
 				} else
 				{
-					filterContext.HttpContext.Response.Redirect("/Account/Login", true);
+					filterContext.HttpContext.Response.Redirect("/Account/Login" + redir, true);
 				}
 			}
 		}

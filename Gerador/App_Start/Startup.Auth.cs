@@ -2,11 +2,11 @@
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
-using IdentitySample.Models;
+using Gerador.Models;
 using Owin;
 using System;
 
-namespace IdentitySample
+namespace Gerador
 {
     public partial class Startup
     {

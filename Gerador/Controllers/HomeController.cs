@@ -5,18 +5,16 @@ using Gerador.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using IdentitySample.Models;
 using System.Data.Entity;
 using Gerador.Controllers;
 using Gerador.Filtros;
 
-namespace IdentitySample.Controllers
+namespace Gerador.Controllers
 {
-	
+    [FiltroPermissao]
     public class HomeController : BaseController
     {
 		private ApplicationDbContext db = new ApplicationDbContext();
-		[Authorize]
 		public async Task<ActionResult> Index(int? page, string searchString, string currentFilter)
         {
 			List<Empreendimentos> empreendimentos = await db.Empreendimentos.ToListAsync();

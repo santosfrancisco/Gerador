@@ -8,15 +8,15 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Gerador.Models;
-using IdentitySample.Models;
 using System.Globalization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Gerador.Filtros;
 
 namespace Gerador.Controllers
 {
-	[Authorize]
+	[FiltroPermissao]
     public class EmpreendimentosController : BaseController
     {
         private ApplicationDbContext db = new ApplicationDbContext();

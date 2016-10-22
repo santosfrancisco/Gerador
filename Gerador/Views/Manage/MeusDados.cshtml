@@ -1,0 +1,57 @@
+﻿@model Gerador.Models.MeusDadosUserViewModel
+
+@{
+	ViewBag.Title = "Meus dados";
+}
+
+@using (Html.BeginForm())
+{
+	@Html.AntiForgeryToken()
+
+	<div class="form-horizontal">
+		<h4>Atualizar dados de cadastro</h4>
+		<hr />
+		@Html.ValidationSummary(true)
+		@Html.HiddenFor(model => model.Id)
+		<div class="form-group">
+			@Html.LabelFor(model => model.Nome, new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.TextBoxFor(m => m.Nome, new { @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.Nome)
+			</div>
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.Email, new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.Email)
+			</div>
+		</div>
+
+        <div class="form-group" hidden="hidden">
+            @*@Html.Label("Tipo de usuário", new { @class = "control-label col-md-2" })
+            <span class="col-md-10">*@
+                @foreach (var item in Model.RolesList)
+                {
+                    <input type="radio" name="SelectedRole" checked="@item.Selected" class="radio-inline" />
+                    @Html.Label(item.Value, new { @class = "control-label" })
+                }
+            @*</span>*@
+        </div>
+
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<input type="submit" value="Salvar" class="btn btn-primary" />
+			</div>
+		</div>
+	</div>
+}
+
+<div>
+	@Html.ActionLink("Voltar", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+</div>
+
+@section Scripts {
+	@Scripts.Render("~/bundles/jqueryval")
+}

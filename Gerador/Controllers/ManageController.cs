@@ -1,4 +1,4 @@
-﻿using IdentitySample.Models;
+﻿using Gerador.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Gerador.Controllers;
+using System.Net;
+using Gerador.Filtros;
 
-namespace IdentitySample.Controllers
+namespace Gerador.Controllers
 {
-    [Authorize]
-    public class ManageController : BaseController
+    [FiltroPermissao]
+    public class ManageController : Controller
     {
+        public ApplicationDbContext db = new ApplicationDbContext();
         public ManageController()
         {
         }
@@ -34,6 +37,18 @@ namespace IdentitySample.Controllers
                 _userManager = value;
             }
         }
+        private ApplicationRoleManager _roleManager;
+        public ApplicationRoleManager RoleManager
+        {
+            get
+            {
+                return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+            }
+            private set
+            {
+                _roleManager = value;
+            }
+        }
 
         //
         // GET: /Account/Index
@@ -47,7 +62,7 @@ namespace IdentitySample.Controllers
                 : message == ManageMessageId.AddPhoneSuccess ? "Número de telefone adicionado."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Número de telefone removido."
                 : "";
-
+            ViewBag.UserId = User.Identity.GetUserId();
             var model = new IndexViewModel
             {
                 HasPassword = HasPassword(),
@@ -224,6 +239,79 @@ namespace IdentitySample.Controllers
         }
 
         //
+        // GET: /Manage/Edit/1
+        public async Task<ActionResult> MeusDados(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var user = await UserManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            var userRoles = await UserManager.GetRolesAsync(user.Id);
+            ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+
+            return View(new MeusDadosUserViewModel()
+            {
+                Id = user.Id,
+                Nome = user.Nome,
+                Email = user.Email,
+                RolesList = RoleManager.Roles.ToList().Select(x => new SelectListItem()
+                {
+                    Selected = userRoles.Contains(x.Name),
+                    Text = x.Name,
+                    Value = x.Name
+                })
+            });
+        }
+
+        //
+        // POST: /Manage/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> MeusDados([Bind(Include = "Nome,UserName,Email,IDEmpresa,Id")] MeusDadosUserViewModel editUser, params string[] selectedRole)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByIdAsync(editUser.Id);
+                if (user == null)
+                {
+                    return HttpNotFound();
+                }
+
+                user.Nome = editUser.Nome;
+                user.UserName = editUser.Email;
+                user.Email = editUser.Email;
+
+                var userRoles = await UserManager.GetRolesAsync(user.Id);
+
+                selectedRole = selectedRole ?? new string[] { };
+
+                var result = await UserManager.AddToRolesAsync(user.Id, selectedRole.Except(userRoles).ToArray<string>());
+
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", result.Errors.First());
+                    return View();
+                }
+                result = await UserManager.RemoveFromRolesAsync(user.Id, userRoles.Except(selectedRole).ToArray<string>());
+
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", result.Errors.First());
+                    return View();
+                }
+                return RedirectToAction("Index");
+            }
+            ModelState.AddModelError("", "Something failed.");
+            return View();
+        }
+
+        //
         // GET: /Manage/ChangePassword
         public ActionResult ChangePassword()
         {
@@ -253,7 +341,7 @@ namespace IdentitySample.Controllers
             AddErrors(result);
             return View(model);
         }
-
+        
         //
         // GET: /Manage/SetPassword
         public ActionResult SetPassword()

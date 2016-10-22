@@ -1,0 +1,144 @@
+﻿@model Gerador.Models.Analises
+
+@{
+    ViewBag.Title = "Solicitar análise";
+}
+
+<h3>Solicitar análise de crédito</h3>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.DataEntrega, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.DataEntrega, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.TextBox("DataEntrega", (DateTime)ViewBag.DataEntrega, htmlAttributes: new { @class = "form-control", @readonly = "true" })
+                @Html.ValidationMessageFor(model => model.DataEntrega, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ValorFinanciamento, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ValorFinanciamento, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ValorFinanciamento, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ValorTotal, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ValorTotal, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ValorTotal, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SaldoDevedor, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SaldoDevedor, new { htmlAttributes = new { @class = "form-control", @readonly = "true" } })
+                @Html.ValidationMessageFor(model => model.SaldoDevedor, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TipoAnalise, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.TipoAnalise, ViewBag.TipoAnalise as SelectList, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TipoAnalise, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IDCliente, "IDCliente", htmlAttributes: new { @class = "control-label col-md-2" })
+
+            <div class="col-md-8" style="border-right:1px #808080 solid">
+                <table id="tbClientes">
+                    <tr id="cliente">
+                        <td><a class="delCliente btn btn-danger btn-sm">X</a></td>
+                        <td> @Html.DropDownList("IDCliente", null, htmlAttributes: new { @class = "form-control" })</td>
+                    </tr>
+
+                </table>
+
+            </div>
+            <div style="margin-left:10px">
+                <a class="btn btn btn-info" id="addCliente">+ Cliente</a>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IDUnidade, "IDUnidade", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("IDUnidade", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.IDUnidade, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Observacao, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Observacao, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Observacao, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Solicitar análise" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-default" })
+</div>
+
+@section scripts
+{
+    <script>
+		jQuery(function ($) {
+			$("#addCliente").click(function () {
+				$("#cliente").clone().appendTo("#tbClientes");
+			});
+			$(document).ready(function () {
+				$(document.body).delegate(".delCliente", "click", function () {
+					var rowCount = $('#tbClientes tr').length;
+					if (rowCount > 1) {
+						var tr = $(this).closest('tr');
+						tr.fadeOut(400, function () {
+							tr.remove();
+						});
+					}
+					return false;
+				});
+			});
+
+
+			$("#DataEntrega").mask("99/99/9999");
+			$("#ValorTotal").maskMoney({ symbol: 'R$ ', showSymbol: true, thousands: '', decimal: ',', symbolStay: true }).val('0,00');
+			$("#ValorFinanciamento").maskMoney({ symbol: 'R$ ', showSymbol: true, thousands: '', decimal: ',', symbolStay: true }).val('0,00');
+		});
+
+		$("#ValorTotal").focusout(function () {
+			var total = parseFloat($("#ValorTotal").val().replace(',', '.'));
+			var finan = parseFloat($("#ValorFinanciamento").val().replace(',', '.'))
+			var saldo = (total - finan).toFixed(2);
+			$("#SaldoDevedor").val(saldo.replace('.', ','));
+		});
+		$("#ValorFinanciamento").focusout(function () {
+			var total = parseFloat($("#ValorTotal").val().replace(',', '.'));
+			var finan = parseFloat($("#ValorFinanciamento").val().replace(',', '.'))
+			var saldo = (total - finan).toFixed(2);
+			$("#SaldoDevedor").val(saldo.replace('.', ','));
+		});
+
+    </script>
+}
+

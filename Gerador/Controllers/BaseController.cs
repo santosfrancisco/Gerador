@@ -1,4 +1,4 @@
-﻿using IdentitySample.Models;
+﻿using Gerador.Models;
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;

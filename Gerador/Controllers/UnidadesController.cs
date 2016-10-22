@@ -8,7 +8,6 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Gerador.Models;
-using IdentitySample.Models;
 using System.IO;
 using LumenWorks.Framework.IO.Csv;
 using System.Text.RegularExpressions;
@@ -16,9 +15,11 @@ using System.Configuration;
 using System.Data.SqlClient;
 using PagedList;
 using System.Text;
+using Gerador.Filtros;
 
 namespace Gerador.Controllers
 {
+    [FiltroPermissao]
 	public class UnidadesController : BaseController
 	{
 		private ApplicationDbContext db = new ApplicationDbContext();
@@ -214,7 +215,7 @@ namespace Gerador.Controllers
 			string[] strArray;
 
 			//-------------------------
-			//Create a datatable that matches the temp table exactly. (WARNING: order of columns must match the order in the table)
+			//Tabela temporária identica a tabela UNIDADES.
 			DataTable dt = new DataTable();
 			dt.Columns.Add(new DataColumn("IDEmpreendimento", typeof(Int32)));
 			dt.Columns.Add(new DataColumn("IDUnidade", typeof(Int32)));

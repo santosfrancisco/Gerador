@@ -1,4 +1,4 @@
-﻿using IdentitySample.Models;
+﻿using Gerador.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -9,10 +9,11 @@ using System.Web;
 using System.Web.Mvc;
 using System.Collections.Generic;
 using Gerador.Controllers;
+using Gerador.Filtros;
 
-namespace IdentitySample.Controllers
+namespace Gerador.Controllers
 {
-    [Authorize(Roles = "Administrador")]
+    [FiltroPermissao(Roles = "Administrador")]
     public class RolesAdminController : BaseController
     {
         public RolesAdminController()

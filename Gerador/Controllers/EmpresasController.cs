@@ -8,11 +8,11 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Gerador.Models;
-using IdentitySample.Models;
+using Gerador.Filtros;
 
 namespace Gerador.Controllers
 {
-	[Authorize]
+	[FiltroPermissao]
     public class EmpresasController : BaseController
     {
         private ApplicationDbContext db = new ApplicationDbContext();

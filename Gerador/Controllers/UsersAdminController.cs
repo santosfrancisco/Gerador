@@ -1,4 +1,4 @@
-﻿using IdentitySample.Models;
+﻿using Gerador.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -10,12 +10,11 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Gerador.Models;
 using Gerador.Controllers;
 using PagedList;
 using Gerador.Filtros;
 
-namespace IdentitySample.Controllers
+namespace Gerador.Controllers
 {
     [Authorize]
     public class UsersAdminController : Controller
@@ -213,6 +212,7 @@ namespace IdentitySample.Controllers
                     return HttpNotFound();
                 }
 
+                user.Nome = editUser.Nome;
                 user.UserName = editUser.Email;
                 user.Email = editUser.Email;
 

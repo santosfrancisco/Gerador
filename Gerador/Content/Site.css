@@ -9,11 +9,19 @@
     padding-right: 15px;
 }
 
-.shadow {
-	-webkit-box-shadow: 10px 10px 10px -6px rgba(0,0,0,0.53);
-	-moz-box-shadow: 10px 10px 10px -6px rgba(0,0,0,0.53);
-	box-shadow: 10px 10px 10px -6px rgba(0,0,0,0.53);
+#anapro-love {
+	color:#000000;
+    position: absolute; 
+    bottom: 0; 
+    right: 10px; 
+    background-color: #ffffff; 
+    padding: 5px; 
+    border-radius: 5px; 
+    position: fixed
+}
 
+.shadow {
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
 .card {

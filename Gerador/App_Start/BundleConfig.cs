@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Optimization;
 
-namespace IdentitySample
+namespace Gerador
 {
 	public class BundleConfig
 	{
@@ -47,8 +47,8 @@ namespace IdentitySample
 					  "~/Scripts/respond.js"));
 
 			bundles.Add(new StyleBundle("~/Content/css").Include(
-						"~/Content/bootstrap.css",
-					  //"~/Content/YetiTheme.min.css",
+						//"~/Content/bootstrap.css",
+					  "~/Content/YetiTheme.min.css",
 					  "~/Content/jquery-confirm.css",
 					  "~/Content/site.css",
 					  "~/Content/animate.css"));

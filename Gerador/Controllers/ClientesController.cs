@@ -8,20 +8,26 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Gerador.Models;
-using IdentitySample.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using PagedList;
+using Gerador.Filtros;
 
 namespace Gerador.Controllers
 {
-	[Authorize]
+	[FiltroPermissao]
     public class ClientesController : BaseController
     {
 		private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Clientes
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? page, string searchString, string currentFilter)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                HttpContext.Response.Redirect("/Account/Login", true);
+            }
+
 			var idUserLogado = User.Identity.GetUserId();
 			var userLogado = await UserManager.FindByIdAsync(idUserLogado);
 			var empresaUserLogado = userLogado.IDEmpresa;
@@ -41,8 +47,30 @@ namespace Gerador.Controllers
 
 				clientes = await db.Clientes.Where(c => c.IDUsuario == idUserLogado).ToListAsync();
 			}
+
+
+			if (!String.IsNullOrEmpty(searchString))
+			{
+				page = 1;
+				clientes = clientes.Where(e => e.Nome.ToUpper().Contains(searchString.ToUpper())).ToList();
+			}
+			else
+			{
+				searchString = currentFilter;
+			}
+
+			ViewBag.CurrentFilter = searchString;
+
+			if (!String.IsNullOrEmpty(searchString))
+			{
+				clientes = clientes.Where(u => u.Nome.ToUpper().Contains(searchString.ToUpper())).ToList();
+			}
+
+			int pageSize = 5;
+			int pageNumber = (page ?? 1);
+
 			//var clientes = db.Clientes.Include(c => c.User);
-            return View(clientes);
+			return View(clientes.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Clientes/Details/5

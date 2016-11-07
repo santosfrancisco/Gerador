@@ -12,11 +12,13 @@ namespace Gerador.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(ApplicationDbContext context)
         {
+            ApplicationDbContext db = new ApplicationDbContext();
+
             if (!context.Roles.Any())
             {
                 var roleStore = new RoleStore<IdentityRole>(context);
@@ -28,14 +30,28 @@ namespace Gerador.Migrations
                 roleManager.Create(role);
             }
 
+            if (!context.Empresas.Any())
+            {
+                var empresa = new Empresas
+                {
+                    Nome = "Anapro",
+                    Responsavel = "Admin",
+                    Responsavel_Email = "admin@anapro.com.br",
+                    Responsavel_Telefone = "1150823353"
+                };
+                db.Empresas.Add(empresa);
+                db.SaveChanges();
+            }
+
             if (!context.Users.Any())
             {
                 var userStore = new UserStore<ApplicationUser>(context);
                 var userManager = new ApplicationUserManager(userStore);
+
                 var user = new ApplicationUser
                 {
-                    Email = "admin@admin.com",
-                    UserName = "admin@admin.com",
+                    Email = "admin@anapro.com.br",
+                    UserName = "admin@anapro.com.br",
                     Nome = "Admin",
                     IDEmpresa = 1
                 };

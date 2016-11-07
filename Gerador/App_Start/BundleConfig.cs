@@ -47,8 +47,9 @@ namespace Gerador
 					  "~/Scripts/respond.js"));
 
 			bundles.Add(new StyleBundle("~/Content/css").Include(
-						//"~/Content/bootstrap.css",
-					  "~/Content/YetiTheme.min.css",
+                      //"~/Content/bootstrap.css",
+                      "~/Content/YetiTheme.min.css",
+                      "~/Content/font-awesome.min.css",
 					  "~/Content/jquery-confirm.css",
 					  "~/Content/site.css",
 					  "~/Content/animate.css"));

@@ -171,7 +171,7 @@ namespace Gerador.Controllers
 				if (FileUpload.FileName.EndsWith(".csv") && FileUpload.FileName.StartsWith(id.ToString()))
 				{
 
-					string fileName = Path.GetFileName(FileUpload.FileName);
+					string fileName = Path.GetFileName(DateTime.Now.ToString("yyyyMMdd_hhmmss") + "_" + FileUpload.FileName);
 					string path = Path.Combine(Server.MapPath("~/App_Data/planilhas"), fileName);
 
 					try

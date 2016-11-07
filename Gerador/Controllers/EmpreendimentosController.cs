@@ -46,7 +46,13 @@ namespace Gerador.Controllers
 		// GET: Quantidade de unidades
 		public string QtdUnidades(int id)
 		{
-			var unidades = db.Unidades.Where(u => u.IDEmpreendimento == id).ToArray();
+            //ViewBag.UnLivres = db.Unidades.Where(u => u.IDEmpreendimento == id).ToArray();
+
+            //ViewBag.UnAnalise =  db.Unidades.Where(u => u.IDEmpreendimento == id).ToArray();
+
+            //ViewBag.UnTotal = db.Unidades.Where(u => u.IDEmpreendimento == id).ToArray();
+
+            var unidades = db.Unidades.Where(u => u.IDEmpreendimento == id).ToArray();
 			string totalUnidades = unidades.Length.ToString();
 			return totalUnidades;
 		}
@@ -75,7 +81,7 @@ namespace Gerador.Controllers
         }
 
 		// GET: Empreendimentos/Create
-		[Authorize(Roles = "Administrador")]
+		[FiltroPermissao(Roles = "Administrador")]
 		public ActionResult Create()
         {
             ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
@@ -85,6 +91,7 @@ namespace Gerador.Controllers
         // POST: Empreendimentos/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [FiltroPermissao(Roles = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "IDEmpreendimento,Nome,DataEntrega,Produto,Campanha,IDEmpresa")] Empreendimentos empreendimentos)
@@ -101,7 +108,7 @@ namespace Gerador.Controllers
         }
 
         // GET: Empreendimentos/Edit/5
-		[Authorize(Roles = "Administrador")]
+		[FiltroPermissao(Roles = "Administrador")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -120,6 +127,7 @@ namespace Gerador.Controllers
         // POST: Empreendimentos/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [FiltroPermissao(Roles = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "IDEmpreendimento,Nome,DataEntrega,Produto,Campanha,IDEmpresa")] Empreendimentos empreendimentos)
@@ -135,7 +143,7 @@ namespace Gerador.Controllers
         }
 
         // GET: Empreendimentos/Delete/5
-		[Authorize(Roles = "Administrador")]
+		[FiltroPermissao(Roles = "Administrador")]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -151,6 +159,7 @@ namespace Gerador.Controllers
         }
 
         // POST: Empreendimentos/Delete/5
+        [FiltroPermissao(Roles = "Administrador")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)

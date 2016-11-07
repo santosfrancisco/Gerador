@@ -14,6 +14,21 @@ namespace Gerador.Models
         public bool BrowserRemembered { get; set; }
     }
 
+    public class MeusDadosViewModel
+    {
+        public string Id { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
+        [Display(Name = "Nome")]
+        public string Nome { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
+        [Display(Name = "Email")]
+        [EmailAddress]
+        public string Email { get; set; }
+
+    }
+
     public class ManageLoginsViewModel
     {
         public IList<UserLoginInfo> CurrentLogins { get; set; }

@@ -256,6 +256,7 @@ namespace Gerador.Controllers
         }
 
         // GET: Clientes/Delete/5
+        [FiltroPermissao(Roles = "Administrador")]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -271,6 +272,7 @@ namespace Gerador.Controllers
         }
 
         // POST: Clientes/Delete/5
+        [FiltroPermissao(Roles = "Administrador")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)

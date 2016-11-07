@@ -9,6 +9,8 @@ using System.Web.Mvc;
 using Gerador.Controllers;
 using System.Net;
 using Gerador.Filtros;
+using System.Data.Entity;
+using System;
 
 namespace Gerador.Controllers
 {
@@ -59,6 +61,7 @@ namespace Gerador.Controllers
                 : message == ManageMessageId.SetPasswordSuccess ? "Sua senha foi definida."
                 : message == ManageMessageId.SetTwoFactorSuccess ? "Autenticação em duas etapas definida."
                 : message == ManageMessageId.Error ? "Ocorreu um erro =(."
+                : message == ManageMessageId.EditDadosSuccess ? "Dados alterados com sucesso."
                 : message == ManageMessageId.AddPhoneSuccess ? "Número de telefone adicionado."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Número de telefone removido."
                 : "";
@@ -239,7 +242,7 @@ namespace Gerador.Controllers
         }
 
         //
-        // GET: /Manage/Edit/1
+        // GET: /Manage/MeusDados/1
         public async Task<ActionResult> MeusDados(string id)
         {
             if (id == null)
@@ -252,29 +255,22 @@ namespace Gerador.Controllers
                 return HttpNotFound();
             }
 
-            var userRoles = await UserManager.GetRolesAsync(user.Id);
-            ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
-
-            return View(new MeusDadosUserViewModel()
+            return View(new MeusDadosViewModel()
             {
                 Id = user.Id,
                 Nome = user.Nome,
                 Email = user.Email,
-                RolesList = RoleManager.Roles.ToList().Select(x => new SelectListItem()
-                {
-                    Selected = userRoles.Contains(x.Name),
-                    Text = x.Name,
-                    Value = x.Name
-                })
+
             });
         }
 
         //
-        // POST: /Manage/Edit/5
+        // POST: /Manage/MeusDados/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> MeusDados([Bind(Include = "Nome,UserName,Email,IDEmpresa,Id")] MeusDadosUserViewModel editUser, params string[] selectedRole)
+        public async Task<ActionResult> MeusDados([Bind(Include = "Nome,Email,Id")] MeusDadosViewModel editUser)
         {
+            ManageMessageId? message;
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByIdAsync(editUser.Id);
@@ -287,25 +283,10 @@ namespace Gerador.Controllers
                 user.UserName = editUser.Email;
                 user.Email = editUser.Email;
 
-                var userRoles = await UserManager.GetRolesAsync(user.Id);
+                message = ManageMessageId.EditDadosSuccess;
+                UserManager.Update(user);
 
-                selectedRole = selectedRole ?? new string[] { };
-
-                var result = await UserManager.AddToRolesAsync(user.Id, selectedRole.Except(userRoles).ToArray<string>());
-
-                if (!result.Succeeded)
-                {
-                    ModelState.AddModelError("", result.Errors.First());
-                    return View();
-                }
-                result = await UserManager.RemoveFromRolesAsync(user.Id, userRoles.Except(selectedRole).ToArray<string>());
-
-                if (!result.Succeeded)
-                {
-                    ModelState.AddModelError("", result.Errors.First());
-                    return View();
-                }
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { Message = message });
             }
             ModelState.AddModelError("", "Something failed.");
             return View();
@@ -341,7 +322,7 @@ namespace Gerador.Controllers
             AddErrors(result);
             return View(model);
         }
-        
+
         //
         // GET: /Manage/SetPassword
         public ActionResult SetPassword()
@@ -469,6 +450,7 @@ namespace Gerador.Controllers
         public enum ManageMessageId
         {
             AddPhoneSuccess,
+            EditDadosSuccess,
             ChangePasswordSuccess,
             SetTwoFactorSuccess,
             SetPasswordSuccess,

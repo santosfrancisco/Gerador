@@ -86,8 +86,10 @@ namespace Gerador.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar senha")]
-        [Compare("Password", ErrorMessage = "Senha e confirmação não conferem.")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "Senha e confirmação não conferem.")]
         public string ConfirmPassword { get; set; }
+        [Required(ErrorMessage = "Selecione o Tipo de Usuário.")]
+        public IEnumerable<System.Web.Mvc.SelectListItem> RolesList { get; set; }
     }
 
     public class ResetPasswordViewModel

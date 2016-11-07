@@ -21,7 +21,7 @@
             }
         </p>
         <p>
-            Telefone: @(Model.PhoneNumber ?? "None") [
+            Telefone: @(Model.PhoneNumber ?? "Não possui") [
             @if (Model.PhoneNumber != null)
             {
                 @Html.ActionLink("Alterar", "AddPhoneNumber")

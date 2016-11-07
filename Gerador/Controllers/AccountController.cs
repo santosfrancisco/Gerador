@@ -17,29 +17,29 @@ namespace Gerador.Controllers
     [FiltroPermissao]
     public class AccountController : BaseController
     {
-		private ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
-        {
-            UserManager = userManager;
-            SignInManager = signInManager;
-        }
+        //public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        //{
+        //    UserManager = userManager;
+        //    SignInManager = signInManager;
+        //}
 
-        private ApplicationUserManager _userManager;
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
+        //private ApplicationUserManager _userManager;
+        //public ApplicationUserManager UserManager
+        //{
+        //    get
+        //    {
+        //        return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+        //    }
+        //    private set
+        //    {
+        //        _userManager = value;
+        //    }
+        //}
 
         //
         // GET: /Account/Login
@@ -63,16 +63,24 @@ namespace Gerador.Controllers
             private set { _signInManager = value; }
         }
 
-		public string NomeUsuario()
-		{
-			var usuario = db.Users.Find(User.Identity.GetUserId());
-			string nomeUsuario = usuario.Nome;
-			if(nomeUsuario == null)
-			{
-				return usuario.Email.ToString();
-			}
-			return usuario.Nome.ToString();
-		}
+        public string NomeUsuario()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                HttpContext.Response.Redirect("/Account/Login", true);
+            }
+
+            var usuario = db.Users.Find(User.Identity.GetUserId());
+            string nomeUsuario = usuario.Nome;
+            if (nomeUsuario == null)
+            {
+                return usuario.Email.ToString();
+            }
+            return usuario.Nome.ToString();
+
+
+
+        }
         //
         // POST: /Account/Login
         [HttpPost]
@@ -84,12 +92,12 @@ namespace Gerador.Controllers
             {
                 return View(model);
             }
-			
-			// This doen't count login failures towards lockout only two factor authentication
-			// To enable password failures to trigger lockout, change to shouldLockout: true
-			var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
 
-			switch (result)
+            // This doen't count login failures towards lockout only two factor authentication
+            // To enable password failures to trigger lockout, change to shouldLockout: true
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+
+            switch (result)
             {
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
@@ -165,7 +173,7 @@ namespace Gerador.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser {Nome = model.Nome, UserName = model.Email, Email = model.Email, IDEmpresa = model.IDEmpresa };
+                var user = new ApplicationUser { Nome = model.Nome, UserName = model.Email, Email = model.Email, IDEmpresa = model.IDEmpresa };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -335,7 +343,7 @@ namespace Gerador.Controllers
             if (loginInfo == null)
             {
                 return RedirectToAction("Login");
-            }	
+            }
 
             // Sign in the user with this external login provider if the user already has a login
             var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
@@ -351,8 +359,8 @@ namespace Gerador.Controllers
                 default:
                     // If the user does not have an account, then prompt the user to create an account
                     ViewBag.ReturnUrl = returnUrl;
-					ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
-					ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
+                    ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+                    ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
                     return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
             }
         }
@@ -377,7 +385,7 @@ namespace Gerador.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email , IDEmpresa = model.IDEmpresa};
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, IDEmpresa = model.IDEmpresa };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -391,8 +399,8 @@ namespace Gerador.Controllers
                 AddErrors(result);
             }
 
-			ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
-			ViewBag.ReturnUrl = returnUrl;
+            ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+            ViewBag.ReturnUrl = returnUrl;
             return View(model);
         }
 

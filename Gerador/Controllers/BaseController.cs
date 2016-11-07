@@ -1,4 +1,5 @@
-﻿using Gerador.Models;
+﻿using Gerador.Filtros;
+using Gerador.Models;
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Web.Mvc;
 
 namespace Gerador.Controllers
 {
+    [FiltroPermissao]
     public class BaseController : Controller
     {
 		public BaseController()

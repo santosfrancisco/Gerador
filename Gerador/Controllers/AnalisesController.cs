@@ -8,19 +8,16 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Gerador.Models;
-using Gerador.Controllers;
-using Microsoft.AspNet.Identity;
 using PagedList;
-using Gerador.Filtros;
+using Microsoft.AspNet.Identity;
 
-namespace GeradorDeProcessos.Controllers
+namespace Gerador.Controllers
 {
-    [FiltroPermissao]
     public class AnalisesController : BaseController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Analises
+        // GET: Analises1
         public async Task<ActionResult> Index(int? page, string searchString, string currentFilter)
         {
             var idUserLogado = User.Identity.GetUserId();
@@ -59,25 +56,18 @@ namespace GeradorDeProcessos.Controllers
 
             int pageSize = 5;
             int pageNumber = (page ?? 1);
-            
+
             return View(analises.ToPagedList(pageNumber, pageSize));
         }
 
-        // GET: Analises/Details/5
+        // GET: Analises1/Details/5
         public async Task<ActionResult> Details(int? id)
         {
-            var idUserLogado = User.Identity.GetUserId();
-            var userLogado = await UserManager.FindByIdAsync(idUserLogado);
-            var empresaUserLogado = userLogado.IDEmpresa;
             if (id == null)
             {
-                return RedirectToAction("Index", "Home", null);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Analises analises = await db.Analises.FindAsync(id);
-            if (!User.IsInRole("Administrador") || analises.Clientes.User.IDEmpresa != empresaUserLogado)
-            {
-                return RedirectToAction("PermissaoNegada", "Usuarios", null);
-            }
             if (analises == null)
             {
                 return HttpNotFound();
@@ -85,49 +75,23 @@ namespace GeradorDeProcessos.Controllers
             return View(analises);
         }
 
-        
-        // GET: Analises/Create
-        public async Task<ActionResult> Create(int? id)
+        // GET: Analises1/Create
+        public ActionResult Create(int id)
         {
-            if (id == null)
-            {
-                return RedirectToAction("Index", "Home", null);
-            };
-
-            var idUserLogado = User.Identity.GetUserId();
-            var userLogado = await UserManager.FindByIdAsync(idUserLogado);
-            var empresaUserLogado = userLogado.IDEmpresa;
-
-            ViewBag.DataEntrega = db.Unidades.Find(id).Empreendimentos.DataEntrega;
-
-            if (User.IsInRole("Administrador"))
-            {
-
-                ViewBag.IDCliente = new SelectList(db.Clientes, "IDCliente", "Cliente");
-                ViewBag.IDunidade = new SelectList(db.Unidades, "IDUnidade", "Numero", id);
-            }
-            else if (User.IsInRole("Gestor"))
-            {
-
-                ViewBag.IDCliente = new SelectList(db.Clientes.Where(c => c.User.IDEmpresa == empresaUserLogado), "IDCliente", "Nome");
-                ViewBag.IDunidade = new SelectList(db.Unidades, "IDUnidade", "Numero", id);
-            }
-            else
-            {
-                ViewBag.IDCliente = new SelectList(db.Clientes.Where(c => c.IDUsuario == idUserLogado), "IDCliente", "Nome");
-                ViewBag.IDunidade = new SelectList(db.Unidades, "IDUnidade", "Numero", id);
-            }
-
+            ViewBag.IDCliente = new SelectList(db.Clientes, "IDCliente", "Nome");
+            ViewBag.IDUnidade = new SelectList(db.Unidades, "IDUnidade", "Numero");
+            ViewBag.IDUsuario = new SelectList(db.Users, "Id", "UsuarioFull");
             ViewBag.TipoAnalise = Analises.Tipos();
+            ViewBag.DataEntrega = db.Unidades.Find(id).Empreendimentos.DataEntrega;
             return View();
         }
 
-        // POST: Analises/Create
+        // POST: Analises1/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "IDAnalise,DataEntrega,ValorFinanciamento,ValorTotal,SaldoDevedor,Observacao,TipoAnalise,IDCliente,IDUnidade")] Analises analises)
+        public async Task<ActionResult> Create([Bind(Include = "IDAnalise,DataEntrega,ValorFinanciamento,ValorTotal,SaldoDevedor,Observacao,TipoAnalise,IDCliente,IDUnidade,IDUsuario")] Analises analises)
         {
             if (ModelState.IsValid)
             {
@@ -136,53 +100,38 @@ namespace GeradorDeProcessos.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.TipoAnalise = Analises.Tipos();
             ViewBag.IDCliente = new SelectList(db.Clientes, "IDCliente", "Nome", analises.IDCliente);
             ViewBag.IDUnidade = new SelectList(db.Unidades, "IDUnidade", "Numero", analises.IDUnidade);
-            //ViewBag.DataEntrega = db.Unidades.Find(id).Empreendimentos.DataEntrega.ToShortDateString();
+            ViewBag.IDUsuario = new SelectList(db.Users, "Id", "UsuarioFull", analises.IDUsuario);
+            ViewBag.TipoAnalise = Analises.Tipos();
             return View(analises);
         }
 
-        // GET: Analises/Edit/5
-        [FiltroPermissao(Roles = "Administrador")]
+        // GET: Analises1/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
-            var idUserLogado = User.Identity.GetUserId();
-            var userLogado = await UserManager.FindByIdAsync(idUserLogado);
-            var empresaUserLogado = userLogado.IDEmpresa;
-
             if (id == null)
             {
-                return RedirectToAction("Index", "Home", null);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Analises analises = await db.Analises.FindAsync(id);
-            //if (tipoUsuario == 1 && analises.Unidades.Empreendimentos.IDEmpresa != empresaUserLogado)
-            //{
-            //    return View("AcessoNegado");
-            //}
-            //else if (tipoUsuario == 2 && analises.Clientes.IDUsuario != idUserLogado)
-            //{
-            //    return View("AcessoNegado");
-            //}
-
-            ViewBag.DataEntrega = db.Unidades.Find(id).Empreendimentos.DataEntrega;
             if (analises == null)
             {
                 return HttpNotFound();
             }
-
-            ViewBag.TipoAnalise = Analises.Tipos();
             ViewBag.IDCliente = new SelectList(db.Clientes, "IDCliente", "Nome", analises.IDCliente);
             ViewBag.IDUnidade = new SelectList(db.Unidades, "IDUnidade", "Numero", analises.IDUnidade);
+            ViewBag.IDUsuario = new SelectList(db.Users, "Id", "Nome", analises.IDUsuario);
+            ViewBag.TipoAnalise = Analises.Tipos();
             return View(analises);
         }
 
-        // POST: Analises/Edit/5
+        // POST: Analises1/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "IDAnalise,DataEntrega,ValorFinanciamento,ValorTotal,SaldoDevedor,Observacao,TipoAnalise,IDCliente,IDUnidade")] Analises analises)
+        public async Task<ActionResult> Edit([Bind(Include = "IDAnalise,DataEntrega,ValorFinanciamento,ValorTotal,SaldoDevedor,Observacao,TipoAnalise,IDCliente,IDUnidade,IDUsuario")] Analises analises)
         {
             if (ModelState.IsValid)
             {
@@ -190,31 +139,29 @@ namespace GeradorDeProcessos.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-
-            ViewBag.TipoAnalise = Analises.Tipos();
             ViewBag.IDCliente = new SelectList(db.Clientes, "IDCliente", "Nome", analises.IDCliente);
             ViewBag.IDUnidade = new SelectList(db.Unidades, "IDUnidade", "Numero", analises.IDUnidade);
+            ViewBag.IDUsuario = new SelectList(db.Users, "Id", "Nome", analises.IDUsuario);
+            ViewBag.TipoAnalise = Analises.Tipos();
             return View(analises);
         }
 
-        // GET: Analises/Delete/5
+        // GET: Analises1/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
-                return RedirectToAction("Index", "Home", null);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Analises analises = await db.Analises.FindAsync(id);
             if (analises == null)
             {
                 return HttpNotFound();
             }
-
-            ViewBag.TipoAnalise = Analises.Tipos();
             return View(analises);
         }
 
-        // POST: Analises/Delete/5
+        // POST: Analises1/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)

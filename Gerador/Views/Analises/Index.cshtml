@@ -1,10 +1,12 @@
 ﻿@using PagedList.Mvc;
 @model PagedList.IPagedList<Gerador.Models.Analises>
+
 @{
-    ViewBag.Title = "Análises";
+    ViewBag.Title = "Index";
 }
 
-<h2>Análises</h2>
+<h2>Index</h2>
+
 <div class="well well-sm form-inline">
     @using (Html.BeginForm("Index", "UsersAdmin"))
     {
@@ -110,4 +112,3 @@
 
 
 </table>
-

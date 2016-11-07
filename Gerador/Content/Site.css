@@ -1,5 +1,5 @@
 ﻿body {
-    padding-top: 50px;
+    padding-top: 40px;
     padding-bottom: 20px;
 }
 
@@ -14,7 +14,7 @@
     position: absolute; 
     bottom: 0; 
     right: 10px; 
-    background-color: #ffffff; 
+    background-color: transparent; 
     padding: 5px; 
     border-radius: 5px; 
     position: fixed

@@ -56,5 +56,9 @@ namespace Gerador.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<Gerador.Models.EditUserViewModel> EditUserViewModels { get; set; }
+
+        public System.Data.Entity.DbSet<Gerador.Models.MeusDadosViewModel> MeusDadosViewModels { get; set; }
     }
 }

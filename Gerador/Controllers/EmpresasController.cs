@@ -12,7 +12,7 @@ using Gerador.Filtros;
 
 namespace Gerador.Controllers
 {
-	[FiltroPermissao]
+	[FiltroPermissao(Roles = "Administrador")]
     public class EmpresasController : BaseController
     {
         private ApplicationDbContext db = new ApplicationDbContext();

@@ -16,6 +16,7 @@ using System.Data.SqlClient;
 using PagedList;
 using System.Text;
 using Gerador.Filtros;
+using System.Security.Cryptography;
 
 namespace Gerador.Controllers
 {

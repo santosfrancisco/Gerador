@@ -100,7 +100,7 @@ namespace Gerador.Controllers
             {
                 db.Empreendimentos.Add(empreendimentos);
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home", null);
             }
 
             ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome", empreendimentos.IDEmpresa);
@@ -136,7 +136,7 @@ namespace Gerador.Controllers
             {
                 db.Entry(empreendimentos).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home", null);
             }
             ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome", empreendimentos.IDEmpresa);
             return View(empreendimentos);

@@ -9,7 +9,6 @@ using System.Web;
 using System.Web.Mvc;
 using Gerador.Models;
 using System.IO;
-using LumenWorks.Framework.IO.Csv;
 using System.Text.RegularExpressions;
 using System.Configuration;
 using System.Data.SqlClient;

@@ -6,7 +6,7 @@
 	ViewBag.Title = "Index";
 }
 
-<h2>Clientes</h2>
+<h3>Clientes</h3>
 <div class="well well-sm form-inline">
 	@using (Html.BeginForm("Index", "Clientes"))
 	{
@@ -18,20 +18,21 @@
 				<div class="input-group">
 					<input type="text" name="searchString" class="form-control" value="@ViewBag.CurrentFilter" placeholder="Pesquisar...">
 					<span class="input-group-btn">
-						<button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+						<button class="btn btn-default" type="submit"><span class="fa fa-search"></span></button>
 					</span>
 				</div>
 			</div>
 		</div>
 		if (@ViewBag.CurrentFilter != null)
 		{
-			<a class="btn badge" href="@Url.Action("Index", new { @searchString = "" })"><span class="glyphicon glyphicon-remove"></span> limpar</a>
+			<a class="btn badge" href="@Url.Action("Index", new { @searchString = "" })"><span class="fa fa-remove"></span> limpar</a>
 		}
 	}
 </div>
-<p>
-    @Html.ActionLink("Novo cliente", "Create", null, htmlAttributes: new { @class = "btn btn-primary btn-xs" })
-</p>
+
+<div id="addCliente" style="text-align:right">
+    <a href="@Url.Action("Create","Clientes", null)" class="btn btn-primary btn-xs"><span class="fa fa-plus-square"></span> Novo cliente</a>
+</div>
 <table class="table table-hover">
 	<thead>
 		<tr>
@@ -66,8 +67,8 @@
 								<span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li><a href="@Url.Action("Edit", "Clientes", new { id = item.IDCliente })"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Editar</a></li>
-								<li><a href="@Url.Action("Details", "Clientes", new { id = item.IDCliente })"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Detalhes</a></li>
+								<li><a href="@Url.Action("Edit", "Clientes", new { id = item.IDCliente })"><span class="fa fa-pencil-square" aria-hidden="true"></span> Editar</a></li>
+								<li><a href="@Url.Action("Details", "Clientes", new { id = item.IDCliente })"><span class="fa fa-info-circle" aria-hidden="true"></span> Detalhes</a></li>
 								@*<li class="divider"></li>
                                 <li><a href="@Url.Action("Delete", "Clientes", new { id = item.IDCliente }, null)"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Remover</a></li>*@
 							</ul>

@@ -4,7 +4,7 @@
 	ViewBag.Title = "Empresas";
 }
 
-<h2>Empresas</h2>
+<h3>Empresas</h3>
 
 @*<div class="well well-sm form-inline">
 		@using (Html.BeginForm("Index", "Home"))
@@ -24,10 +24,9 @@
 			</div>
 		}
 	</div>*@
-<p>
-	@Html.ActionLink("Nova empresa", "Create", null, htmlAttributes: new { @class = "btn btn-primary btn-xs" })
-</p>
-
+<div id="addEmpresa" style="text-align:right">
+    <a href="@Url.Action("Create","Empresas", null)" class="btn btn-primary btn-xs"><span class="fa fa-plus-square"></span> Nova empresa</a>
+</div>
 
 <table class="table table-hover">
 	<thead>
@@ -58,7 +57,7 @@
 					<td>
 						<div id="menuGerenciar" class="btn-group">
 							<div class="btn-group">
-								<a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+							    <a href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 									Menu
 									<span class="caret"></span>
 								</a>

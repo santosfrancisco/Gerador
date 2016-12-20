@@ -5,6 +5,12 @@
 }
 
 <hgroup>
+    @{
+        if (ViewBag.Msg == null)
+        {
+            ViewBag.Msg = "Você não tem permissão para acessar este recurso.";
+        }
+    }
     <h1 class="text-error">Acesso negado!</h1>
-    <h2 class="text-error">Você não tem permissão para acessar este recurso.</h2>
+    <h2 class="text-error">@ViewBag.Msg</h2>
 </hgroup>

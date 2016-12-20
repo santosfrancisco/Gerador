@@ -76,10 +76,23 @@ namespace Gerador.Controllers
             {
                 return usuario.Email.ToString();
             }
-            return usuario.Nome.ToString();
+            return nomeUsuario;
+        }
 
+        public string EmpresaUsuario()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                HttpContext.Response.Redirect("/Account/Login", true);
+            }
 
-
+            var usuario = db.Users.Find(User.Identity.GetUserId());
+            string empresaUsuario = usuario.Empresas.Nome;
+            if (empresaUsuario == null)
+            {
+                return "Empresa";
+            }
+            return empresaUsuario;
         }
         //
         // POST: /Account/Login

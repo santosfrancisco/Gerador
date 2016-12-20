@@ -16,10 +16,11 @@ using Gerador.Filtros;
 
 namespace Gerador.Controllers
 {
-    [Authorize]
+    //[Authorize]
+    [FiltroPermissao(Roles = "Administrador, Gestor")]
     public class UsersAdminController : Controller
     {
-		public ApplicationDbContext db = new ApplicationDbContext();
+        public ApplicationDbContext db = new ApplicationDbContext();
         public UsersAdminController()
         {
         }
@@ -31,73 +32,74 @@ namespace Gerador.Controllers
         }
 
         private ApplicationUserManager _userManager;
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
+        public ApplicationUserManager UserManager {
+            get {
                 return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
-            private set
-            {
+            private set {
                 _userManager = value;
             }
         }
 
         private ApplicationRoleManager _roleManager;
-        public ApplicationRoleManager RoleManager
-        {
-            get
-            {
+        public ApplicationRoleManager RoleManager {
+            get {
                 return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
             }
-            private set
-            {
+            private set {
                 _roleManager = value;
             }
         }
 
-		// GET: Empresa usuario logado
-		public async Task<int> GetEmpresa(string id)
-		{
-			var usuario = await UserManager.FindByIdAsync(id);
+        // GET: Empresa usuario logado
+        public async Task<int> GetEmpresa(string id)
+        {
+            var usuario = await UserManager.FindByIdAsync(id);
 
-			return usuario.IDEmpresa;
+            return usuario.IDEmpresa;
 
-		}
-		public void GetPerfil(string id)
-		{
+        }
+        public void GetPerfil(string id)
+        {
 
-			var roles = UserManager.GetRoles(id);
-			
-			
-		}
+            var roles = UserManager.GetRoles(id);
+
+
+        }
         //
         // GET: /Users/
         public async Task<ActionResult> Index(int? page, string searchString, string currentFilter)
         {
-			//var usuarios = await UserManager.Users.ToListAsync();
-			List<ApplicationUser> usuarios = await UserManager.Users.ToListAsync() ;
-			if (!String.IsNullOrEmpty(searchString))
-			{
-				page = 1;
-				usuarios = usuarios.Where(e => e.Nome.ToUpper().Contains(searchString.ToUpper()) || e.Email.ToUpper().Contains(searchString.ToUpper())).ToList();
-			}
-			else
-			{
-				searchString = currentFilter;
-			}
-			ViewBag.CurrentFilter = searchString;
+            var idUserLogado = User.Identity.GetUserId();
+            var userLogado = await UserManager.FindByIdAsync(idUserLogado);
+            var empresaUserLogado = userLogado.IDEmpresa;
 
-			//if (!String.IsNullOrEmpty(searchString))
-			//{
-			//	usuarios = usuarios.Where(e => e.Nome.ToUpper().Contains(searchString.ToUpper()) || e.Email == searchString.ToUpper()).ToList();
-			//}
+            List<ApplicationUser> usuarios = await UserManager.Users.ToListAsync();
+            if (!User.IsInRole("Administrador"))
+            {
+                usuarios = usuarios.Where(e => e.IDEmpresa == empresaUserLogado).ToList();
+            }
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                page = 1;
+                usuarios = usuarios.Where(e => e.Nome.ToUpper().Contains(searchString.ToUpper()) || e.Email.ToUpper().Contains(searchString.ToUpper())).ToList();
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewBag.CurrentFilter = searchString;
 
-			int pageSize = 5;
-			int pageNumber = (page ?? 1);
-			return View(usuarios.ToPagedList(pageNumber, pageSize));
-			//return View(await UserManager.Users.ToListAsync());
-		}
+            //if (!String.IsNullOrEmpty(searchString))
+            //{
+            //	usuarios = usuarios.Where(e => e.Nome.ToUpper().Contains(searchString.ToUpper()) || e.Email == searchString.ToUpper()).ToList();
+            //}
+
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
+            return View(usuarios.ToPagedList(pageNumber, pageSize));
+            //return View(await UserManager.Users.ToListAsync());
+        }
 
         //
         // GET: /Users/Details/5
@@ -110,21 +112,21 @@ namespace Gerador.Controllers
             var user = await UserManager.FindByIdAsync(id);
 
             ViewBag.RoleNames = await UserManager.GetRolesAsync(user.Id);
-			ViewBag.Empresa = user.Empresas.Nome;
+            ViewBag.Empresa = user.Empresas.Nome;
 
             return View(user);
         }
 
         //
         // GET: /Users/Create
-		[FiltroPermissao(Roles = "Administrador, Analista, Gestor")]
+        [FiltroPermissao(Roles = "Administrador, Analista, Gestor")]
         public async Task<ActionResult> Create()
         {
             //Get the list of Roles
             ViewBag.RoleId = new SelectList(await RoleManager.Roles.ToListAsync(), "Name", "Name");
 
-			ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
-			return View();
+            ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+            return View();
         }
 
         //
@@ -134,43 +136,63 @@ namespace Gerador.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { Nome = userViewModel.Nome, UserName = userViewModel.Email, Email = userViewModel.Email, IDEmpresa = userViewModel.IDEmpresa };
-                var adminresult = await UserManager.CreateAsync(user, userViewModel.Password);
-
-                //Add User to the selected Roles 
-                if (adminresult.Succeeded)
+                if (selectedRoles != null)
                 {
-                    if (selectedRoles != null)
+                    var user = new ApplicationUser
+                    {
+                        Nome = userViewModel.Nome,
+                        UserName = userViewModel.Email,
+                        Email = userViewModel.Email,
+                        IDEmpresa = userViewModel.IDEmpresa
+                    };
+
+                    var adminresult = await UserManager.CreateAsync(user, userViewModel.Password);
+
+                    //Add User to the selected Roles 
+                    if (adminresult.Succeeded)
                     {
                         var result = await UserManager.AddToRolesAsync(user.Id, selectedRoles);
                         if (!result.Succeeded)
                         {
                             ModelState.AddModelError("", result.Errors.First());
                             ViewBag.RoleId = new SelectList(await RoleManager.Roles.ToListAsync(), "Name", "Name");
-							ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
-							return View();
+                            ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+                            return View();
                         }
+
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", adminresult.Errors.First());
+                        ViewBag.RoleId = new SelectList(RoleManager.Roles, "Name", "Name");
+                        ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+                        return View();
+
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError("", adminresult.Errors.First());
+                    ModelState.AddModelError("", "Selecione um tipo de usuário.");
                     ViewBag.RoleId = new SelectList(RoleManager.Roles, "Name", "Name");
-					ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
-					return View();
-
+                    ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+                    return View();
                 }
+
                 return RedirectToAction("Index");
             }
             ViewBag.RoleId = new SelectList(RoleManager.Roles, "Name", "Name");
-			ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
-			return View();
+            ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+            return View();
         }
 
         //
         // GET: /Users/Edit/1
         public async Task<ActionResult> Edit(string id)
         {
+            var idUserLogado = User.Identity.GetUserId();
+            var userLogado = await UserManager.FindByIdAsync(idUserLogado);
+            var empresaUserLogado = userLogado.IDEmpresa;
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -181,14 +203,29 @@ namespace Gerador.Controllers
                 return HttpNotFound();
             }
 
-            var userRoles = await UserManager.GetRolesAsync(user.Id);
-			ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+            if (user.IDEmpresa != empresaUserLogado && !User.IsInRole("Administrador"))
+            {
+                ViewBag.Msg = "Você não pode editar usuários de outra empresa.";
+                return View("AcessoNegado");
+            }
 
-			return View(new EditUserViewModel()
+            var userRoles = await UserManager.GetRolesAsync(user.Id);
+
+            if (!User.IsInRole("Administrador"))
+            {
+                ViewBag.IDEmpresa = new SelectList(db.Empresas.Where(u => u.IDEmpresa == empresaUserLogado), "IDEmpresa", "Nome", user.IDEmpresa);
+            }
+            else
+            {
+                ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+            }
+
+            return View(new EditUserViewModel()
             {
                 Id = user.Id,
-				Nome = user.Nome,
+                Nome = user.Nome,
                 Email = user.Email,
+                IDEmpresa = user.IDEmpresa,
                 RolesList = RoleManager.Roles.ToList().Select(x => new SelectListItem()
                 {
                     Selected = userRoles.Contains(x.Name),
@@ -215,6 +252,7 @@ namespace Gerador.Controllers
                 user.Nome = editUser.Nome;
                 user.UserName = editUser.Email;
                 user.Email = editUser.Email;
+                user.IDEmpresa = editUser.IDEmpresa;
 
                 var userRoles = await UserManager.GetRolesAsync(user.Id);
 

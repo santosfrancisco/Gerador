@@ -16,7 +16,7 @@
 		<div class="form-group">
 			<div class="col-lg-12">
 				<div class="input-group">
-					<input type="text" name="searchString" class="form-control" value="@ViewBag.CurrentFilter" placeholder="Pesquisar...">
+					<input type="text" name="searchString" class="form-control" value="@ViewBag.CurrentFilter" placeholder="Digite Nome ou CPF/CNPJ...">
 					<span class="input-group-btn">
 						<button class="btn btn-default" type="submit"><span class="fa fa-search"></span></button>
 					</span>
@@ -78,13 +78,12 @@
 				<td>
 					@if(item.TipoPessoa == 0)
 					{
-						<span class="badge">PF</span>
+						<span class="badge alert-success">PF</span>
 					}
 					else
 					{
-						<span class="badge">PJ</span>
+						<span class="badge alert-warning">PJ</span>
 					}
-					@*@Html.DisplayFor(modelItem => item.TipoPessoa)*@
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.Nome)

@@ -44,21 +44,36 @@ namespace Gerador.Controllers
             return View(empreendimentos);
         }
 		// GET: Quantidade de unidades
-		public string QtdUnidades(int id)
+		public string QtdUnidadesLivres(int id)
 		{
-            //ViewBag.UnLivres = db.Unidades.Where(u => u.IDEmpreendimento == id).ToArray();
-
-            //ViewBag.UnAnalise =  db.Unidades.Where(u => u.IDEmpreendimento == id).ToArray();
-
-            //ViewBag.UnTotal = db.Unidades.Where(u => u.IDEmpreendimento == id).ToArray();
-
-            var unidades = db.Unidades.Where(u => u.IDEmpreendimento == id).ToArray();
+            var unidades = db.Unidades.Where(u => u.IDEmpreendimento == id && u.UnidadeStatus == Unidades.Status.Livre).ToArray();
 			string totalUnidades = unidades.Length.ToString();
 			return totalUnidades;
 		}
+        // GET: Quantidade de unidades
+        public string QtdUnidadesAnalise(int id)
+        {
+            var unidades = db.Unidades.Where(u => u.IDEmpreendimento == id && u.UnidadeStatus == Unidades.Status.Análise).ToArray();
+            string totalUnidades = unidades.Length.ToString();
+            return totalUnidades;
+        }
+        // GET: Quantidade de unidades
+        public string QtdUnidadesConcluida(int id)
+        {
+            var unidades = db.Unidades.Where(u => u.IDEmpreendimento == id && u.UnidadeStatus == Unidades.Status.Concluída).ToArray();
+            string totalUnidades = unidades.Length.ToString();
+            return totalUnidades;
+        }
+        // GET: Quantidade de unidades
+        public string QtdUnidadesTotal(int id)
+        {
+            var unidades = db.Unidades.Where(u => u.IDEmpreendimento == id).ToArray();
+            string totalUnidades = unidades.Length.ToString();
+            return totalUnidades;
+        }
 
-		// GET: data do habite-se
-		public string Habitese(int id)
+        // GET: data do habite-se
+        public string Habitese(int id)
 		{
 			var empreendimento = db.Empreendimentos.Find(id);
 			string dataHabitese = empreendimento.DataEntrega.ToShortDateString();

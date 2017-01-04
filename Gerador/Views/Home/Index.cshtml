@@ -40,8 +40,15 @@
                 <tr class="row">
                     <td>
                         <h3>@Html.DisplayFor(modelItem => item.Nome)</h3>
+                        <p>
+                            @Html.Label("Unidades:")
+                            <span class="badge badge-livre animated flipInY tooltips">@Html.Action("QtdUnidadesLivres", "Empreendimentos", new { id = item.IDEmpreendimento })<span class="tooltiptext">Livres</span></span>
+                            <span class="badge badge-analise animated flipInY tooltips">@Html.Action("QtdUnidadesAnalise", "Empreendimentos", new { id = item.IDEmpreendimento })<span class="tooltiptext">Em análise</span></span>
+                            <span class="badge badge-concluido animated flipInY tooltips">@Html.Action("QtdUnidadesConcluida", "Empreendimentos", new { id = item.IDEmpreendimento })<span class="tooltiptext">Concluídas</span></span>
+                            <span class="badge badge-total animated flipInY tooltips">@Html.Action("QtdUnidadestotal", "Empreendimentos", new { id = item.IDEmpreendimento })<span class="tooltiptext">Tota de unidades</span></span>
+                        </p>
                         @Html.Label("Habite-se: ") <span class="label label-primary"> @Html.Action("Habitese", "Empreendimentos", new { id = item.IDEmpreendimento })</span>
-                        @Html.Label("Total de unidades:") <span class="badge animated flipInY">@Html.Action("QtdUnidades", "Empreendimentos", new { id = item.IDEmpreendimento })</span>
+                        
                     </td>
                     <td></td>
                     <td>

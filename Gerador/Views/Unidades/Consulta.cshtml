@@ -29,12 +29,18 @@
 	<table class="table table-responsive table-bordered">
 		<tr>
 			<th>
-				@Html.Label("Ações")
+				@Html.DisplayName("Ações")
 			</th>
+            <th class="col-md-1">
+                @Html.DisplayNameFor(model => model.First().Tipo)
+            </th>
 			<th>
 				@Html.ActionLink("Número", "Consulta", new { sortOrder = ViewBag.NumeroParam, currentFilter = ViewBag.CurrentFilter })
 			</th>
-			<th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().UnidadeObservacao)
+            </th>
+			<th class="col-md-1">
 				@Html.ActionLink("Status", "Consulta", new { sortOrder = ViewBag.StatusParam, currentFilter = ViewBag.CurrentFilter })
 			</th>
 		</tr>
@@ -45,18 +51,6 @@
 				<tr>
 					<td class="col-md-1">
 						<div class="btn-toolbar">
-							@*@if (item.UnidadeStatus == Unidades.Status.Análise || item.UnidadeStatus == Unidades.Status.Concluída)
-							{
-								<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Clique para solicitár análise de crédito para esta unidade" data-original-title="Tooltip on top" onclick="location.href='@Url.Action("Details", "Analises", new { id = item.IDUnidade })'">Visualizar Análise</button>
-							}
-							else if (item.UnidadeStatus == Unidades.Status.Livre)
-							{
-								<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Clique para solicitár análise de crédito para esta unidade" data-original-title="Tooltip on top" onclick="location.href='@Url.Action("Create", "Analises", new { id = item.IDUnidade })'">Solicitar Análise</button>
-							}
-							else
-							{
-
-							}*@
 							<div id="menuGerenciar" class="btn-group">
 								<div class="btn-group-sm">
 									<a href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -82,11 +76,24 @@
 							</div>
 						</div>
 					</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tipo)
+                    </td>
 					<td>
 						@Html.DisplayFor(modelItem => item.Numero)
 					</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UnidadeObservacao)
+                    </td>
 					<td>
-						@Html.DisplayFor(modelItem => item.UnidadeStatus)
+						@if (Html.DisplayFor(modelItem => item.UnidadeStatus).ToString() == "Livre")
+                        {
+                            <span class="label label-success">@Html.DisplayFor(modelItem => item.UnidadeStatus)</span>
+                        }
+                        else
+                        {
+                            <span class="label label-warning">@Html.DisplayFor(modelItem => item.UnidadeStatus)</span>
+                        }
 					</td>
 
 				</tr>

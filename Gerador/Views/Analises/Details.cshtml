@@ -4,14 +4,13 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h3>Detalhes da análise</h3>
 
 <div>
-    <h4>Analises</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Clientes.Nome)
+            @Html.DisplayNameFor(model => model.Clientes.IDCliente)
         </dt>
 
         <dd>
@@ -19,7 +18,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Unidades.Numero)
+            @Html.DisplayNameFor(model => model.Unidades.IDUnidade)
         </dt>
 
         <dd>
@@ -27,11 +26,19 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.User.Nome)
+            @Html.DisplayNameFor(model => model.Unidades.Tipo)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.User.Nome)
+            @Html.DisplayFor(model => model.Unidades.Tipo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.UsuarioFull)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.UsuarioFull)
         </dd>
 
         <dt>
@@ -47,15 +54,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ValorFinanciamento)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ValorTotal)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ValorTotal)
+            R$ @Html.DisplayFor(model => model.ValorFinanciamento)
         </dd>
 
         <dt>
@@ -63,15 +62,15 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.SaldoDevedor)
+            R$ @Html.DisplayFor(model => model.SaldoDevedor)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Observacao)
+            @Html.DisplayNameFor(model => model.ValorTotal)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Observacao)
+            R$ @Html.DisplayFor(model => model.ValorTotal)
         </dd>
 
         <dt>
@@ -82,9 +81,17 @@
             @Html.DisplayFor(model => model.TipoAnalise)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.Observacao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Observacao)
+        </dd>
+
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.IDAnalise }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Editar", "Edit", new { id = Model.IDAnalise }, htmlAttributes: new {@class="btn btn-primary"}) 
+    @Html.ActionLink("Voltar", "Index", null, htmlAttributes: new {@class="btn btn-default"})
 </p>

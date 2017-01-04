@@ -19,10 +19,14 @@ namespace Gerador.Models
 		[ForeignKey("Empreendimentos")]
 		public int IDEmpreendimento { get; set; }
 		[Key]
+        [Display(Name = "Unidade")]
 		public int IDUnidade { get; set; }
+        [Display(Name ="Número")]
 		public string Numero { get; set; }
+        [Display(Name = "Status")]
 		public Status UnidadeStatus { get; set; }
 		public Tipos Tipo { get; set; }
+        [Display(Name = "Observação")]
 		public string UnidadeObservacao { get; set; }
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

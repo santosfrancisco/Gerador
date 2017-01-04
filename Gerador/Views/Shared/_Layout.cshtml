@@ -26,17 +26,12 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li><a href="@Url.Action("Index", "Home")"><span class="fa fa-home"></span> Início</a></li>
+                            <li><a href="@Url.Action("Index", "Clientes")"><span class="fa fa-users"></span> Clientes</a></li>
+                            <li><a href="@Url.Action("Index", "Analises")"><span class="fa fa-calculator"></span> Análises</a></li>
+                            <li><a href="@Url.Action("Administracao", "Home")"><span class="fa fa-cogs"></span> Administração</a></li>
                             @*<li>@Html.ActionLink("Sobre", "About", "Home")</li>*@
                             @*<li>@Html.ActionLink("Contato", "Contact", "Home")</li>*@
-                            <li><a href="@Url.Action("Index", "Clientes")"><span class="fa fa-users"></span> Clientes</a></li>
-                            <li><a href="@Url.Action("Administracao", "Home")"><span class="fa fa-cogs"></span> Administração</a></li>
                         }
-
-
-                        @*@if (Request.IsAuthenticated && User.IsInRole("Administrador")) {
-                                <li>@Html.ActionLink("Permissões", "Index", "RolesAdmin")</li>
-                                <li>@Html.ActionLink("Usuários", "Index", "UsersAdmin")</li>
-                            }*@
                     </ul>
                     @Html.Partial("_LoginPartial")
                 </div>

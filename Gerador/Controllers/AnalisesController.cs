@@ -40,7 +40,7 @@ namespace Gerador.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 page = 1;
-                analises = analises.Where(e => e.Unidades.Numero.ToUpper().Contains(searchString.ToUpper())).ToList();
+                analises = analises.Where(e => e.Unidades.Numero.ToUpper().Contains(searchString.ToUpper()) || e.Clientes.Nome.ToUpper().Contains(searchString.ToUpper())).ToList();
             }
             else
             {
@@ -49,10 +49,10 @@ namespace Gerador.Controllers
 
             ViewBag.CurrentFilter = searchString;
 
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                analises = analises.Where(u => u.Unidades.Numero.ToUpper().Contains(searchString.ToUpper())).ToList();
-            }
+            //if (!String.IsNullOrEmpty(searchString))
+            //{
+            //    analises = analises.Where(u => u.Unidades.Numero.ToUpper().Contains(searchString.ToUpper()) || u.Clientes.Nome.ToUpper().Contains(searchString.ToUpper())).ToList();
+            //}
 
             int pageSize = 5;
             int pageNumber = (page ?? 1);
@@ -76,11 +76,18 @@ namespace Gerador.Controllers
         }
 
         // GET: Analises1/Create
-        public ActionResult Create(int id)
+        public ActionResult Create(int? id)
         {
+            if (id == null)
+            {
+                ViewBag.ErrMsg = "Id de unidade nulo";
+                return View("Error");
+            }
+
+            var idUserLogado = User.Identity.GetUserId();
             ViewBag.IDCliente = new SelectList(db.Clientes, "IDCliente", "Nome");
-            ViewBag.IDUnidade = new SelectList(db.Unidades, "IDUnidade", "Numero");
-            ViewBag.IDUsuario = new SelectList(db.Users, "Id", "UsuarioFull");
+            ViewBag.IDUnidade = new SelectList(db.Unidades.Where(u => u.IDUnidade == id), "IDUnidade", "Numero");
+            ViewBag.IDUsuario = new SelectList(db.Users, "Id", "UsuarioFull", idUserLogado);
             ViewBag.TipoAnalise = Analises.Tipos();
             ViewBag.DataEntrega = db.Unidades.Find(id).Empreendimentos.DataEntrega;
             return View();
@@ -91,10 +98,13 @@ namespace Gerador.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "IDAnalise,DataEntrega,ValorFinanciamento,ValorTotal,SaldoDevedor,Observacao,TipoAnalise,IDCliente,IDUnidade,IDUsuario")] Analises analises)
+        public async Task<ActionResult> Create([Bind(Include = "IDAnalise,DataEntrega,ValorTotal,ValorFinanciamento,SaldoDevedor,Observacao,TipoAnalise,IDCliente,IDUnidade,IDUsuario")] Analises analises)
         {
             if (ModelState.IsValid)
             {
+                Unidades unidade = new Unidades();
+                unidade = db.Unidades.Find(analises.IDUnidade);
+                unidade.UnidadeStatus = Unidades.Status.Análise;
                 db.Analises.Add(analises);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -104,6 +114,7 @@ namespace Gerador.Controllers
             ViewBag.IDUnidade = new SelectList(db.Unidades, "IDUnidade", "Numero", analises.IDUnidade);
             ViewBag.IDUsuario = new SelectList(db.Users, "Id", "UsuarioFull", analises.IDUsuario);
             ViewBag.TipoAnalise = Analises.Tipos();
+            ViewBag.DataEntrega = analises.DataEntrega;
             return View(analises);
         }
 
@@ -120,9 +131,10 @@ namespace Gerador.Controllers
                 return HttpNotFound();
             }
             ViewBag.IDCliente = new SelectList(db.Clientes, "IDCliente", "Nome", analises.IDCliente);
-            ViewBag.IDUnidade = new SelectList(db.Unidades, "IDUnidade", "Numero", analises.IDUnidade);
+            ViewBag.IDUnidade = new SelectList(db.Unidades.Where(u => u.IDUnidade == analises.IDUnidade), "IDUnidade", "Numero", analises.IDUnidade);
             ViewBag.IDUsuario = new SelectList(db.Users, "Id", "Nome", analises.IDUsuario);
             ViewBag.TipoAnalise = Analises.Tipos();
+            ViewBag.DataEntrega = analises.DataEntrega;
             return View(analises);
         }
 
@@ -140,9 +152,10 @@ namespace Gerador.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.IDCliente = new SelectList(db.Clientes, "IDCliente", "Nome", analises.IDCliente);
-            ViewBag.IDUnidade = new SelectList(db.Unidades, "IDUnidade", "Numero", analises.IDUnidade);
+            ViewBag.IDUnidade = new SelectList(db.Unidades.Where(u => u.IDUnidade == analises.IDUnidade), "IDUnidade", "Numero", analises.IDUnidade);
             ViewBag.IDUsuario = new SelectList(db.Users, "Id", "Nome", analises.IDUsuario);
             ViewBag.TipoAnalise = Analises.Tipos();
+            ViewBag.DataEntrega = analises.DataEntrega;
             return View(analises);
         }
 
@@ -167,6 +180,9 @@ namespace Gerador.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Analises analises = await db.Analises.FindAsync(id);
+            Unidades unidade = new Unidades(); 
+            unidade = db.Unidades.Find(analises.IDUnidade);
+            unidade.UnidadeStatus = Unidades.Status.Livre; 
             db.Analises.Remove(analises);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

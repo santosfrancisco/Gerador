@@ -52,7 +52,7 @@ namespace Gerador.Controllers
 			if (!String.IsNullOrEmpty(searchString))
 			{
 				page = 1;
-				clientes = clientes.Where(e => e.Nome.ToUpper().Contains(searchString.ToUpper())).ToList();
+				clientes = clientes.Where(e => e.Nome.ToUpper().Contains(searchString.ToUpper()) || e.CpfCnpj.Contains(searchString)).ToList();
 			}
 			else
 			{
@@ -61,10 +61,10 @@ namespace Gerador.Controllers
 
 			ViewBag.CurrentFilter = searchString;
 
-			if (!String.IsNullOrEmpty(searchString))
-			{
-				clientes = clientes.Where(u => u.Nome.ToUpper().Contains(searchString.ToUpper())).ToList();
-			}
+			//if (!String.IsNullOrEmpty(searchString))
+			//{
+			//	clientes = clientes.Where(u => u.Nome.ToUpper().Contains(searchString.ToUpper())).ToList();
+			//}
 
 			int pageSize = 5;
 			int pageNumber = (page ?? 1);

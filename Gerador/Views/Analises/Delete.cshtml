@@ -4,15 +4,14 @@
     ViewBag.Title = "Delete";
 }
 
-<h2>Delete</h2>
+<h2>Cancelar análise</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Tem certeza que deseja cancelar esta análise?</h3>
 <div>
-    <h4>Analises</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Clientes.Nome)
+            @Html.DisplayNameFor(model => model.Clientes.IDCliente)
         </dt>
 
         <dd>
@@ -20,7 +19,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Unidades.Numero)
+            @Html.DisplayNameFor(model => model.Unidades.IDUnidade)
         </dt>
 
         <dd>
@@ -28,43 +27,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.User.Nome)
+            @Html.DisplayNameFor(model => model.User.UsuarioFull)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.User.Nome)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DataEntrega)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DataEntrega)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ValorFinanciamento)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ValorFinanciamento)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ValorTotal)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ValorTotal)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.SaldoDevedor)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.SaldoDevedor)
+            @Html.DisplayFor(model => model.User.UsuarioFull)
         </dd>
 
         <dt>
@@ -89,8 +56,8 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <input type="submit" value="Cancelar" class="btn btn-danger" /> 
+            @Html.ActionLink("Voltar", "Index",null, htmlAttributes: new {@class="btn btn-default"})
         </div>
     }
 </div>

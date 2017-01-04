@@ -64,18 +64,15 @@
 										<span class="caret"></span>
 									</a>
 									<ul class="dropdown-menu">
-										@if (item.UnidadeStatus == Unidades.Status.Análise || item.UnidadeStatus == Unidades.Status.Concluída)
-										{
-										<li><a href="@Url.Action("Details", "Analises", new { id = item.IDUnidade })"><span class="fa fa-info-circle" aria-hidden="true"></span> Detalhes</a></li>
-										}
-										else if (item.UnidadeStatus == Unidades.Status.Livre)
+										@if (item.UnidadeStatus == Unidades.Status.Livre)
 										{
 											<li><a href="@Url.Action( "Create", "Analises", new { id = item.IDUnidade })"><span class="fa fa-send" aria-hidden="true"></span> Solicitar análise</a></li>
 
-										} else
-										{
-
-										}
+                                        }
+                                        else
+                                        {
+                                            <li><a href="@Url.Action( "Index", "Analises", new { searchString = item.Numero })"><span class="fa fa-question-circle" aria-hidden="true"></span> Detalhes da análise</a></li>
+                                        }
 										<li><a href="@Url.Action( "Details", "Unidades", new { id = item.IDUnidade })"><span class="fa fa-info-circle" aria-hidden="true"></span> Detalhes</a></li>
 										<li><a href="@Url.Action( "Edit", "Unidades", new { id = item.IDUnidade })"><span class="fa fa-pencil-square" aria-hidden="true"></span> Editar</a></li>
                                         <li class="divider"></li>

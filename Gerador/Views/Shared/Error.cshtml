@@ -4,7 +4,8 @@
     ViewBag.Title = "Ops!";
 }
 
-<hgroup>
-    <h1 class="text-error">Erro =(.</h1>
-    <h2 class="text-error">Ocorreu um erro ao tentar processar sua solicitação. Tente novamente.</h2>
-</hgroup>
+<div class="text-center animated swing" style="margin-top:40px">
+    <img src="~/Content/images/doh.gif" width="250"/>
+    <h1 class="text-error">Ops! Algo deu errado.</h1>
+    <h2 class="text-error">Erro: <i>@ViewBag.ErrMsg</i></h2>
+</div>

@@ -25,7 +25,7 @@
 		</div>
 		if (@ViewBag.CurrentFilter != null)
 		{
-			<a class="btn badge" href="@Url.Action("Index", new { @searchString = "" })"><span class="fa fa-remove"></span> limpar</a>
+			<a class="btn badge" href="@Url.Action("Index","Clientes", new { @searchString = "" })"><span class="fa fa-remove"></span> limpar</a>
 		}
 	}
 </div>

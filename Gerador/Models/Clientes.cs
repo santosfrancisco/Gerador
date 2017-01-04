@@ -17,6 +17,7 @@ namespace Gerador.Models
             this.Analises = new HashSet<Analises>();
         }
 		[Key]
+        [Display(Name = "Cliente")]
         public int IDCliente { get; set; }
 		[Display(Name = "Tipo")]
         public int TipoPessoa { get; set; }

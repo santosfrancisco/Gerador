@@ -21,6 +21,7 @@ namespace Gerador.Models
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
 		public virtual ICollection<Clientes> Clientes { get; set; }
 		public virtual Empresas Empresas { get; set; }
+        [Display(Name = "Usuário")]
 		public string UsuarioFull { get { return Nome + " - " + Email; } }
 		public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

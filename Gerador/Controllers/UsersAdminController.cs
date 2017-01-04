@@ -119,13 +119,29 @@ namespace Gerador.Controllers
 
         //
         // GET: /Users/Create
-        [FiltroPermissao(Roles = "Administrador, Analista, Gestor")]
+        [FiltroPermissao(Roles = "Administrador, Gestor")]
         public async Task<ActionResult> Create()
         {
+            var idUserLogado = User.Identity.GetUserId();
+            var userLogado = await UserManager.FindByIdAsync(idUserLogado);
+            var empresaUserLogado = userLogado.IDEmpresa;
+
             //Get the list of Roles
             ViewBag.RoleId = new SelectList(await RoleManager.Roles.ToListAsync(), "Name", "Name");
 
-            ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+            if (User.IsInRole("Administrador"))
+            {
+                ViewBag.IDEmpresa = new SelectList(db.Empresas, "IDEmpresa", "Nome");
+                ViewBag.RoleId = new SelectList(await RoleManager.Roles.ToListAsync(), "Name", "Name");
+            }
+            else
+            {
+                ViewBag.IDEmpresa = new SelectList(db.Empresas.Where(e => e.IDEmpresa == empresaUserLogado), "IDEmpresa",
+                       "Nome");
+                ViewBag.RoleId = new SelectList(await RoleManager.Roles.Where(r => r.Name == "Usuário").ToListAsync(), "Name", "Name");
+
+            }
+
             return View();
         }
 

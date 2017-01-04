@@ -261,6 +261,7 @@
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\images\default.gif" />
+    <Content Include="Content\images\doh.gif" />
     <Content Include="Content\images\logo_mini.png" />
     <Content Include="Content\jquery-confirm.css" />
     <Content Include="Content\logo.jpg" />
